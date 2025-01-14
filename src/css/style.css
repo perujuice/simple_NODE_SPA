@@ -1,19 +1,25 @@
-.item {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 200px;
-    border: 4px solid #999;
-    padding-left: 1em;
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: url('./images/desktop-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
-h2 {
-    border-bottom: 1px solid #ccc;
+#desktop {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
 }
 
-main {
-    position: relative;
-    border: 4px solid #999;
-    height: 400px;
+.icon {
+    text-align: center;
+    cursor: pointer;
 }
+
+.icon img {
+    width: 64px;
+    height: 64px;
+}
+
