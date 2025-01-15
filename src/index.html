@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- making the website responsive. -->
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <title>Personal Web Desktop</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- making the website responsive. -->
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="icon" href="images/favicon.jpg"/>
+  <title>Personal Web Desktop</title>
 </head>
 <body>
-    <div id="desktop">
-        <!-- Icons for applications -->
-        <div class="icon" id="memory-game-icon">
-            <img src="images/memory.png" alt="Memory Game">
-            <p>Memory Game</p>
-        </div>
-        <div class="icon" id="chat-icon">
-            <img src="images/" alt="Chat">
-            <p>Chat</p>
-        </div>
-        <div class="icon" id="custom-app-icon">
-            <img src="images/custom.png" alt="Custom App">
-            <p>Custom App</p>
-        </div>
-    </div>
+  <header>
+    <h1>Personal Web Desktop</h1>
+  </header>
+  <!-- Nav bar for the applications! -->
+  <nav id="desktop-nav">
+    <ul>
+      <li class="icon" id="memory-game-icon">
+        <img src="./images/memory.png" alt="Memory Game">
+        <p>Memory Game</p>
+      </li>
+      <li class="icon" id="chat-icon">
+        <img src="images/chat.png" alt="Chat">
+        <p>Chat</p>
+      </li>
+      <li class="icon" id="custom-app-icon">
+        <img src="images/quiz.webp" alt="Quiz App">
+        <p>Custom App</p>
+      </li>
+    </ul>
+  </nav>
 
-    <script type="module" src="js/desktop.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

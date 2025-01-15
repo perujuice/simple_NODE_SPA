@@ -6,7 +6,8 @@ const customAppIcon = document.getElementById('custom-app-icon')
 // Event listeners for icons to open windows
 memoryGameIcon.addEventListener('click', () => createWindow('Memory Game'))
 chatIcon.addEventListener('click', () => createWindow('Chat'))
-customAppIcon.addEventListener('click', () => createWindow('Custom App'))
+// I'll probably just use the A2 quiz game here!
+customAppIcon.addEventListener('click', () => createWindow('Quiz Game'))
 
 /**
  * Create a window with the given app name.
