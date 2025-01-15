@@ -1,9 +1,12 @@
+@import url('footer.css');
+
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     font-family: Arial, sans-serif;
-    background: url('./images/desktop-bg.jpg') no-repeat center center fixed;
+    color: white;
+    background: url('../images/desktop.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -22,6 +25,7 @@ body, html {
 .icon {
     text-align: center;
     cursor: pointer;
+    color: white;
 }
 
 .icon img {
