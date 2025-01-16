@@ -1,0 +1,69 @@
+/* Custom window container */
+.custom-window {
+    position: absolute;
+    width: 350px;
+    height: 400px;
+    border-radius: 5px;
+    background-color: #FFEB3B; /* Bright yellow background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Lighter shadow for contrast */
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    cursor: default;
+}
+
+/* Window header (title bar) */
+.window-header {
+    background: linear-gradient(to bottom, #FF9800, #FF5722); /* Orange gradient */
+    color: white;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab; /* Indicate draggable behavior */
+  }
+  
+
+/* Title text in the header */
+.window-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.window-header.dragging {
+    cursor: grabbing;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+
+/* Button styling for closing a window */
+.close-button {
+    background: #FF4D4D;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+/* Close button hover effect */
+.close-button:hover {
+    background: #FF1A1A;
+}
+
+/* Window content */
+.window-content {
+    padding: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Status panel */
+.status-panel {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Rounded corners */
+    color: #333;
+}
