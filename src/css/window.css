@@ -8,6 +8,7 @@
     overflow: auto; /* Enable scrolling */
     font-family: 'Arial', sans-serif;
     cursor: default;
+    z-index: 1; /* Default z-index for focused window when clicked*/
 }
 
 /* Window header (title bar) */

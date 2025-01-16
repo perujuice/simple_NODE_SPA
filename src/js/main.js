@@ -59,8 +59,13 @@ function openWindow (appName) {
  * @param {HTMLElement} newWindow - The window to add drag and drop handlers to.
  */
 function addDragAndDropHandlers (newWindow) {
-  let offsetX = 0
-  let offsetY = 0
+  let offsetX = 0 // default value
+  let offsetY = 0 // default value
+
+  // Focus the window when it's clicked and bring it to the front
+  newWindow.addEventListener('click', () => {
+    bringWindowToFront(newWindow)
+  })
 
   newWindow.addEventListener('dragstart', (event) => {
     const style = window.getComputedStyle(newWindow, null)
@@ -68,6 +73,8 @@ function addDragAndDropHandlers (newWindow) {
     offsetY = parseInt(style.top, 10) - event.clientY
     event.dataTransfer.setData('text/plain', `${offsetX},${offsetY}`)
     event.dataTransfer.effectAllowed = 'move'
+
+    bringWindowToFront(newWindow)
 
     console.log('DRAG START')
     console.log(event)
@@ -87,4 +94,23 @@ function addDragAndDropHandlers (newWindow) {
   // Prevent default behaviors for drop areas
   document.body.addEventListener('dragover', (event) => event.preventDefault())
   document.body.addEventListener('drop', (event) => event.preventDefault())
+}
+
+/**
+ * Bring the window to the front by adjusting its z-index.
+ * @param {HTMLElement} windowElement - The window element to bring to the front.
+ */
+function bringWindowToFront (windowElement) {
+  // Set the highest z-index value to bring this window to the front
+  const allWindows = document.querySelectorAll('.custom-window')
+  let highestZIndex = 0
+
+  // Loop through all windows to find the highest z-index
+  allWindows.forEach((windowElement) => {
+    const currentZIndex = parseInt(window.getComputedStyle(windowElement).zIndex, 10)
+    highestZIndex = Math.max(highestZIndex, currentZIndex)
+  })
+
+  // Set the z-index of the clicked or dragged window to the highest + 1 to bring it to the front
+  windowElement.style.zIndex = highestZIndex + 1
 }
