@@ -1,3 +1,5 @@
+import * as memoryGame from './modules/memoryGame.js'
+
 // Description: Main entry point for the application.
 window.addEventListener('load', main)
 
@@ -32,9 +34,6 @@ function openWindow (appName) {
         <button class="close-button">X</button>
     </header>
     <div class="window-content">
-        <div class="status-panel">
-            <p>Time: very long time!</p>
-        </div>
     </div>
   `
 
@@ -52,6 +51,18 @@ function openWindow (appName) {
   newWindow.querySelector('.close-button').addEventListener('click', () => {
     newWindow.remove()
   })
+
+  // Load the app based on the app name
+  if (appName === 'Memory Game') {
+    const memoryGameContainer = document.createElement('div')
+    const statusPanel = document.createElement('div')
+    statusPanel.className = 'status-panel'
+    memoryGameContainer.className = 'memory-game-container' // Use a class instead of an ID
+    newWindow.querySelector('.window-content').appendChild(memoryGameContainer)
+    newWindow.querySelector('.window-content').appendChild(statusPanel)
+
+    setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer), 0)
+  }
 }
 
 /**

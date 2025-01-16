@@ -1,5 +1,6 @@
 @import url('footer.css'); 
 @import url('window.css');
+@import url('memory-game.css');
 
 body, html {
     margin: 0;
