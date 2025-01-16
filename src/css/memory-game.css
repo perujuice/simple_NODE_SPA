@@ -13,6 +13,10 @@
   cursor: pointer;
 }
 
+.tile.flipped {
+  transform: rotateY(180deg);
+}
+
 .tile .front-face,
 .tile .back-face {
   position: absolute;
@@ -35,3 +39,7 @@
   transition: opacity 0.3s ease;
 }
 
+.tile.flipped .back-face {
+  opacity: 0; /* Hides the question mark when the tile is flipped */
+  pointer-events: none; /* Prevents interaction with the back face when flipped */
+}
