@@ -16,6 +16,7 @@ function startMemoryGame (rows = 4, cols = 4, container) {
   }
 
   // Create the game board html structure.
+  // Note to self for reference: https://www.w3schools.com/css/tryit.asp?filename=trycss_grid
   container.innerHTML = '' // Clear any existing game content
   container.className = 'game-board'
   container.style.gridTemplateRows = `repeat(${rows}, 1fr)` // Style the grid rows
@@ -27,6 +28,9 @@ function startMemoryGame (rows = 4, cols = 4, container) {
     gameArray.push(i)
     gameArray.push(i)
   }
+
+  // Shuffle the array to randomize the tile positions
+  gameArray.sort(() => Math.random() - 0.5) // Producing numbers between -0.5 and 0.5
 
   let firstTile = null // Initialize the first tile
   let secondTile = null // Initialize the second tile
@@ -77,14 +81,29 @@ function startMemoryGame (rows = 4, cols = 4, container) {
       // Check if the second tile has been set
     } else if (tile !== firstTile) {
       secondTile = tile
+      checkMatch()
     }
+  }
 
-    // Make sure the tiles flip back after a short delay
-    setTimeout(() => {
-      firstTile.classList.remove('flipped')
-      secondTile.classList.remove('flipped')
-      firstTile = null
-      secondTile = null
-    }, 1000)
+  /**
+   * Check if the two flipped tiles match.
+   */
+  function checkMatch () {
+    const firstNumber = firstTile.dataset.number
+    const secondNumber = secondTile.dataset.number
+
+    // Check if the numbers match
+    if (firstNumber === secondNumber) {
+      firstTile = null // Reset the first tile
+      secondTile = null // Reset the second tile
+    } else {
+      // If the numbers don't match, flip the tiles back after a delay.
+      setTimeout(() => {
+        firstTile.classList.remove('flipped')
+        secondTile.classList.remove('flipped')
+        firstTile = null
+        secondTile = null
+      }, 1000)
+    }
   }
 }
