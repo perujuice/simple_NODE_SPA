@@ -10,32 +10,3 @@ body, html {
     background: url('../images/desktop.jpg') no-repeat center center fixed;
     background-size: cover;
 }
-
-#desktop-nav {
-    padding: 20px;
-}
-
-#desktop-nav ul {
-    list-style-type: none;
-    display: flex;
-    gap: 20px;
-    padding: 0;
-    margin: 0;
-}
-
-.icon {
-    text-align: center;
-    cursor: pointer;
-    color: white;
-}
-
-.icon img {
-    width: 64px;
-    height: 64px;
-}
-
-main {
-    position: relative;
-    height: 100%;
-}
-

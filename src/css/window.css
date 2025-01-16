@@ -1,12 +1,11 @@
 /* Custom window container */
 .custom-window {
     position: absolute;
-    width: 350px;
-    height: 400px;
+    width: 250px;
+    height: 300px;
     border-radius: 5px;
     background-color: #FFEB3B; /* Bright yellow background */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Lighter shadow for contrast */
-    overflow: hidden;
+    overflow: auto; /* Enable scrolling */
     font-family: 'Arial', sans-serif;
     cursor: default;
 }
@@ -29,10 +28,9 @@
     font-weight: bold;
 }
 
-.window-header.dragging {
+.window-header {
     cursor: grabbing;
     opacity: 1;
-    transition: opacity 0.2s;
   }
 
 /* Button styling for closing a window */
