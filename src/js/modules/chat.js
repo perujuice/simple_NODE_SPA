@@ -34,6 +34,7 @@ export class ChatApp {
       textarea.value = ''
     })
 
+    // Add a keydown event listener to the textarea to send messages when Enter is pressed
     textarea.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault()

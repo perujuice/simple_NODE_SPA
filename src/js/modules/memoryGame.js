@@ -17,8 +17,9 @@ const imageFiles = [
  * @param {*} rows The number of rows in the game board.
  * @param {*} cols The number of columns in the game board
  * @param {*} container The container where the game will be rendered.
+ * @param {*} statusPanel The status panel where the game status will be displayed.
  */
-function startMemoryGame (rows = 4, cols = 4, container) {
+function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
   const totalTiles = rows * cols // Calculate the total number of tiles
   // Check if the total number of tiles is even
   // They have to be even since we always need pairs of tiles.
@@ -43,6 +44,7 @@ function startMemoryGame (rows = 4, cols = 4, container) {
   let secondTile = null // Initialize the second tile
   let attempts = 0 // Initialize the number of attempts
   let matchedPairs = 0 // Initialize the number of matched pairs
+  const startTime = Date.now()
 
   // Create the tiles
   const tiles = []
@@ -99,6 +101,7 @@ function startMemoryGame (rows = 4, cols = 4, container) {
     } else if (tile !== firstTile) {
       secondTile = tile
       attempts++ // Increment the number of attempts
+      updateStatusPanel() // Update the status panel
       checkMatch()
     }
   }
@@ -110,23 +113,42 @@ function startMemoryGame (rows = 4, cols = 4, container) {
     const firstImageSrc = firstTile.dataset.imageSrc
     const secondImageSrc = secondTile.dataset.imageSrc
 
-    // Check if the numbers match
+    // Check if the tiles match
     if (firstImageSrc === secondImageSrc) {
       matchedPairs++ // Increment the matched pairs
       firstTile = null // Reset the first tile
       secondTile = null // Reset the second tile
 
       if (matchedPairs === totalTiles / 2) {
-        setTimeout(() => alert(`You won! Attempts: ${attempts}`), 500) // Display a winning message
+        clearInterval(timerInterval)
+        setTimeout(() => {
+          updateStatusPanel(true)
+        }, 500) // Display a winning message
       }
     } else {
-      // If the numbers don't match, flip the tiles back after a delay.
+      // If the tiles don't match, flip them back after a delay
       setTimeout(() => {
         firstTile.classList.remove('flipped')
         secondTile.classList.remove('flipped')
         firstTile = null
         secondTile = null
       }, 1000)
+    }
+  }
+
+  /**
+   *
+   * @param {*} gameEnded Whether the game has ended or not.
+   */
+  function updateStatusPanel (gameEnded = false) {
+    const elapsedTime = Math.floor((Date.now() - startTime) / 1000)
+    statusPanel.innerHTML = `
+      <p>Attempts: ${attempts}</p>
+      <p>Time: ${elapsedTime} seconds</p>
+    `
+
+    if (gameEnded) {
+      statusPanel.innerHTML += '<p>Game Over! Congratulations!</p>'
     }
   }
 
@@ -168,4 +190,7 @@ function startMemoryGame (rows = 4, cols = 4, container) {
 
   // Listen for arrow key presses to navigate the tiles
   document.addEventListener('keydown', handleKeyboardNavigation)
+
+  const timerInterval = setInterval(updateStatusPanel, 1000)
+  updateStatusPanel() // Initialize status panel immediately
 }

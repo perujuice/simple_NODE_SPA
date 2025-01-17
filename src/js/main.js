@@ -57,12 +57,12 @@ function openWindow (appName) {
     const memoryGameContainer = document.createElement('div')
     const statusPanel = document.createElement('div')
     statusPanel.className = 'status-panel'
-    memoryGameContainer.className = 'memory-game-container' // Use a class instead of an ID
+
+    memoryGameContainer.className = 'memory-game-container'
     newWindow.querySelector('.window-content').appendChild(memoryGameContainer)
     newWindow.querySelector('.window-content').appendChild(statusPanel)
 
-    setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer), 0)
-
+    setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer, statusPanel), 0)
     // Lod the chat app based on the app name.
   } else if (appName === 'Chat') {
     const chatContainer = document.createElement('div')

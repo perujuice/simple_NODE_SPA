@@ -50,7 +50,9 @@
 
 /* Status panel */
 .status-panel {
-  margin-top: 10px;
+  width: 200px;
+  height: 90px;
+  margin-top: 30px;
   padding: 10px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
