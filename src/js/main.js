@@ -1,4 +1,5 @@
 import * as memoryGame from './modules/memoryGame.js'
+import { ChatApp } from './modules/chat.js'
 
 // Description: Main entry point for the application.
 window.addEventListener('load', main)
@@ -20,7 +21,7 @@ function main () {
 
 /**
  * Open a new window with the given app name.
- * @param {String} appName - The name of the app to open.
+ * @param {string} appName - The name of the app to open.
  */
 function openWindow (appName) {
   const newWindow = document.createElement('div')
@@ -33,8 +34,7 @@ function openWindow (appName) {
         <span class="window-title">${appName}</span>
         <button class="close-button">X</button>
     </header>
-    <div class="window-content">
-    </div>
+    <div class="window-content"> </div>
   `
 
   document.body.appendChild(newWindow)
@@ -62,6 +62,17 @@ function openWindow (appName) {
     newWindow.querySelector('.window-content').appendChild(statusPanel)
 
     setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer), 0)
+
+    // Lod the chat app based on the app name.
+  } else if (appName === 'Chat') {
+    const chatContainer = document.createElement('div')
+    chatContainer.className = 'chat-container'
+    newWindow.querySelector('.window-content').appendChild(chatContainer)
+
+    // Create the ChatApp instance for this window
+    const chat = new ChatApp(chatContainer)
+    chat.initUI()
+    chat.displayMessages()
   }
 }
 

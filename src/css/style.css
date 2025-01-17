@@ -1,6 +1,7 @@
 @import url('footer.css'); 
 @import url('window.css');
 @import url('memory-game.css');
+@import url('chat.css');
 
 body, html {
     margin: 0;

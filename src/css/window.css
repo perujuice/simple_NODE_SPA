@@ -2,7 +2,7 @@
 .custom-window {
     position: absolute;
     width: 250px;
-    height: 300px;
+    height: 400px;
     border-radius: 5px;
     background-color: #FFEB3B; /* Bright yellow background */
     overflow: auto; /* Enable scrolling */
@@ -20,6 +20,14 @@
     justify-content: space-between;
     align-items: center;
     cursor: grab; /* Indicate draggable behavior */
+  }
+
+/* Make sure the parent container (window-container) is a flex container */
+.window-content {
+    display: flex;
+    justify-content: center; /* Horizontally center the child */
+    align-items: center; /* Vertically center the child (optional) */
+    padding: 0 10px; /* Optional: add some padding to prevent content from touching the edges */
   }
   
 
