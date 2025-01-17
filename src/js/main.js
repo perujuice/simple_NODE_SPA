@@ -1,5 +1,6 @@
 import * as memoryGame from './modules/memoryGame.js'
 import { ChatApp } from './modules/chat.js'
+import { QuizGame } from './modules/quizGame.js'
 
 // Description: Main entry point for the application.
 window.addEventListener('load', main)
@@ -74,6 +75,13 @@ function openWindow (appName, appIcon) {
     // Create the ChatApp instance for this window
     const chat = new ChatApp(chatContainer)
     chat.displayMessages()
+  } else if (appName === 'Quiz Game') {
+    const quizGameContainer = document.createElement('div')
+    quizGameContainer.className = 'quiz-game-container'
+    newWindow.querySelector('.window-content').appendChild(quizGameContainer)
+
+    const quizGame = new QuizGame(quizGameContainer)
+    quizGame.loadQuiz()
   }
 }
 
