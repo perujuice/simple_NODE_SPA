@@ -43,3 +43,8 @@
   opacity: 0; /* Hides the question mark when the tile is flipped */
   pointer-events: none; /* Prevents interaction with the back face when flipped */
 }
+
+.tile:focus {
+  outline: 2px solid #007BFF; /* Blue border when the tile is focused */
+}
+

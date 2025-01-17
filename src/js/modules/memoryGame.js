@@ -44,6 +44,8 @@ function startMemoryGame (rows = 4, cols = 4, container) {
   let attempts = 0 // Initialize the number of attempts
   let matchedPairs = 0 // Initialize the number of matched pairs
 
+  // Create the tiles
+  const tiles = []
   // render the game tiles
   gameArray.forEach((imageSrc, index) => {
     // Create the tile element for each image in the gameArray.
@@ -71,10 +73,15 @@ function startMemoryGame (rows = 4, cols = 4, container) {
     tile.tabIndex = 0 // Make it focusable for keyboard navigation
     tile.addEventListener('click', () => handleTileClick(tile))
     // Not sure yet about the keyboard navigation!
+    // Keyboard navigation state
     tile.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') handleTileClick(tile)
     })
+    tiles.push(tile) // Add the tile to the tiles array
   })
+
+  let currentIndex = 0 // Initialize the current index for keyboard navigation
+  tiles[currentIndex].focus() // Focus on the first tile
 
   /**
    * Handle the click event on a tile.
@@ -122,4 +129,43 @@ function startMemoryGame (rows = 4, cols = 4, container) {
       }, 1000)
     }
   }
+
+  /**
+   * Handle keyboard navigation for the game tiles.
+   * @param {*} event The keydown event object.
+   */
+  function handleKeyboardNavigation (event) {
+    const { key } = event
+    const totalTiles = tiles.length
+    // Prevent default behavior to stop it from affecting other UI elements like headers
+    event.preventDefault()
+
+    // Move based on the arrow key pressed
+    if (key === 'ArrowUp') {
+      // Move up by subtracting cols
+      if (currentIndex >= cols) {
+        currentIndex -= cols
+      }
+    } else if (key === 'ArrowDown') {
+      // Move down by adding cols
+      if (currentIndex + cols < totalTiles) {
+        currentIndex += cols
+      }
+    } else if (key === 'ArrowLeft') {
+      // Move left by subtracting 1, but ensure it doesnt move to a tile in a previous row
+      if (currentIndex % cols !== 0) {
+        currentIndex -= 1
+      }
+    } else if (key === 'ArrowRight') {
+      // Move right by adding 1, but ensure it donesn't move to a tile in the next row
+      if (currentIndex % cols !== cols - 1) {
+        currentIndex += 1
+      }
+    }
+    // Focus the new tile after updating the index
+    tiles[currentIndex].focus()
+  }
+
+  // Listen for arrow key presses to navigate the tiles
+  document.addEventListener('keydown', handleKeyboardNavigation)
 }
