@@ -48,3 +48,13 @@
   outline: 2px solid #007BFF; /* Blue border when the tile is focused */
 }
 
+/* Status panel */
+.status-panel {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px; /* Rounded corners */
+  color: #333;
+}
+

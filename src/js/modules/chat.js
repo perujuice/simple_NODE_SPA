@@ -11,6 +11,7 @@ export class ChatApp {
 
     this.websocket.connect()
     this.websocket.onMessage = this.receiveMessage.bind(this) // Set the callback for receiving messages
+    this.initUI()
   }
 
   initUI () {
@@ -28,13 +29,11 @@ export class ChatApp {
     sendButton.innerText = 'Send'
     this.container.appendChild(sendButton)
 
-    // Event listener for sending message
     sendButton.addEventListener('click', () => {
       this.sendMessage(textarea.value)
       textarea.value = ''
     })
 
-    // Handle sending message on Enter key
     textarea.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault()

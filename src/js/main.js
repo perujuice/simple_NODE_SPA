@@ -71,7 +71,6 @@ function openWindow (appName) {
 
     // Create the ChatApp instance for this window
     const chat = new ChatApp(chatContainer)
-    chat.initUI()
     chat.displayMessages()
   }
 }
