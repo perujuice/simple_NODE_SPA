@@ -57,6 +57,12 @@
     height: 60px;
 }
 
+#desktop-nav .icon .chat-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
 /* Copyright section styling */
 .footer .copyright {
     position: absolute;

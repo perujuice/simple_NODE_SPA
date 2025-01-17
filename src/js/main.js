@@ -14,16 +14,17 @@ function main () {
   const chatIcon = document.getElementById('chat-icon')
   const customAppIcon = document.getElementById('custom-app-icon')
 
-  memoryGameIcon.addEventListener('click', () => openWindow('Memory Game'))
-  chatIcon.addEventListener('click', () => openWindow('Chat'))
-  customAppIcon.addEventListener('click', () => openWindow('Quiz Game'))
+  memoryGameIcon.addEventListener('click', () => openWindow('Memory Game', '/images/memory.png'))
+  chatIcon.addEventListener('click', () => openWindow('Chat', '/images/chat.png'))
+  customAppIcon.addEventListener('click', () => openWindow('Quiz Game', '/images/quiz.webp'))
 }
 
 /**
  * Open a new window with the given app name.
  * @param {string} appName - The name of the app to open.
+ * @param {string} appIcon - The icon of the app to open.
  */
-function openWindow (appName) {
+function openWindow (appName, appIcon) {
   const newWindow = document.createElement('div')
   newWindow.draggable = true
   newWindow.className = 'custom-window'
@@ -31,6 +32,7 @@ function openWindow (appName) {
 
   newWindow.innerHTML = `
     <header class="window-header">
+        <img src="${appIcon}" alt="${appName}" class="window-logo">
         <span class="window-title">${appName}</span>
         <button class="close-button">X</button>
     </header>

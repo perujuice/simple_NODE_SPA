@@ -22,6 +22,14 @@
     cursor: grab; /* Indicate draggable behavior */
   }
 
+
+.window-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
 /* Window content */
 .window-content {
     padding: 20px;
