@@ -11,13 +11,16 @@ export class WebSocketHandler {
   connect () {
     this.socket = new WebSocket(this.url)
 
+    // Log when the connection is opened.
     this.socket.onopen = () => {
       console.log('WebSocket connected.')
     }
 
+    // Log any messages received from the server.
     this.socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      if (message.type !== 'heartbeat') {
+      console.log('Message received from socket:', message)
+      if (message.type !== 'heartbeat' && message.type !== 'notification') {
         this.onMessage(message)
       }
     }
@@ -27,6 +30,7 @@ export class WebSocketHandler {
       console.error('WebSocket error:', error)
     }
 
+    // When the server closes the connection.
     this.socket.onclose = () => {
       console.log('WebSocket connection closed.')
     }

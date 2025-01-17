@@ -1,13 +1,13 @@
 // chat.js
 import { WebSocketHandler } from './websocket.js'
-import { getUsername, setUsername } from './storage.js'
+import * as storage from './storage.js'
 
 export class ChatApp {
   constructor (container) {
     this.container = container
     this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket')
-    this.username = getUsername() || prompt('Enter your username:')
-    setUsername(this.username)
+    this.username = storage.getUsername() || prompt('Enter your username:')
+    storage.setUsername(this.username)
 
     this.websocket.connect()
     this.websocket.onMessage = this.receiveMessage.bind(this) // Set the callback for receiving messages
@@ -77,8 +77,8 @@ export class ChatApp {
     // Log the received message
     console.log('Received message:', message)
 
-    // Retrieve messages from localStorage
-    let messages = JSON.parse(localStorage.getItem('chatMessages')) || []
+    // Retrieve messages from localStorage to display last 20 messages
+    let messages = storage.getMessages()
 
     // Add the new message to the stored messages
     messages.push(message)
@@ -89,7 +89,7 @@ export class ChatApp {
     }
 
     // Store the updated list of messages in localStorage
-    localStorage.setItem('chatMessages', JSON.stringify(messages))
+    storage.setMessages(messages)
 
     // Display the last 20 messages in the chat window
     this.displayMessages()
@@ -102,7 +102,7 @@ export class ChatApp {
     const messageArea = this.container.querySelector('.messages-area')
 
     // Retrieve messages from localStorage
-    const messages = JSON.parse(localStorage.getItem('chatMessages')) || []
+    const messages = storage.getMessages()
 
     // Clear the message area before re-populating it
     messageArea.innerHTML = ''

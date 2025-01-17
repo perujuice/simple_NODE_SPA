@@ -22,7 +22,6 @@
     cursor: grab; /* Indicate draggable behavior */
   }
 
-/* Make sure the parent container (window-container) is a flex container */
 .window-content {
     display: flex;
     justify-content: center; /* Horizontally center the child */
