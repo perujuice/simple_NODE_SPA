@@ -66,7 +66,7 @@ function openWindow (appName, appIcon) {
     newWindow.querySelector('.window-content').appendChild(statusPanel)
 
     setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer, statusPanel), 0)
-    // Lod the chat app based on the app name.
+    // Load the chat app based on the app name.
   } else if (appName === 'Chat') {
     const chatContainer = document.createElement('div')
     chatContainer.className = 'chat-container'
@@ -75,10 +75,21 @@ function openWindow (appName, appIcon) {
     // Create the ChatApp instance for this window
     const chat = new ChatApp(chatContainer)
     chat.displayMessages()
+    // Load the quiz game based on the app name.
   } else if (appName === 'Quiz Game') {
     const quizGameContainer = document.createElement('div')
     quizGameContainer.className = 'quiz-game-container'
     newWindow.querySelector('.window-content').appendChild(quizGameContainer)
+    const questionContainer = document.createElement('div')
+    const question = document.createElement('div')
+    questionContainer.className = 'question-container'
+    question.id = 'question'
+    quizGameContainer.appendChild(questionContainer)
+    questionContainer.appendChild(question)
+
+    const timer = document.createElement('div')
+    timer.id = 'timer'
+    quizGameContainer.appendChild(timer)
 
     const quizGame = new QuizGame(quizGameContainer)
     quizGame.loadQuiz()

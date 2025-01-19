@@ -1,5 +1,5 @@
 import * as Fetch from './Fetch.js'
-export { displayQuestion, startGame, handleAnswerSubmission, displayAnswerMessage, displayHihgScores }
+export { displayQuestion, startGame, handleAnswerSubmission, displayAnswerMessage, displayHihgScores, displayAlternatives }
 
 const localStorage = window.localStorage
 
@@ -43,6 +43,7 @@ async function startGame () {
   const response = await Fetch.get('https://courselab.lnu.se/quiz/question/1')
   const question = await Fetch.getQuestion(response)
   const question1 = document.getElementById('question')
+  console.log('Question1: ', question)
   question1.innerHTML = `Question 1: ${question}`
   return response
 }
@@ -140,4 +141,39 @@ function displayAnswerMessage (response) {
   const message = Fetch.getAnswerMessage(response)
   const answerMessage = document.getElementById('question')
   answerMessage.innerHTML = message
+}
+
+/**
+ *
+ * @param {*} alternatives the alternatives
+ * @param {*} container the container
+ */
+/**
+ * Display the alternatives to the user.
+ * @param {Object} alternatives - The alternatives to display, with keys representing values and values as labels.
+ * @param {HTMLElement} container - The container where the alternatives will be displayed.
+ */
+function displayAlternatives (alternatives, container) {
+  const inputContainer = container.querySelector('.input-container') || document.createElement('div')
+  inputContainer.className = 'input-container'
+  inputContainer.innerHTML = '' // Clear any previous alternatives
+
+  // Create and append each alternative as a radio button
+  for (const [key, value] of Object.entries(alternatives)) {
+    const label = document.createElement('label')
+    const radio = document.createElement('input')
+    radio.type = 'radio'
+    radio.name = 'alternative'
+    radio.value = key
+
+    label.appendChild(radio)
+    label.appendChild(document.createTextNode(value))
+
+    inputContainer.appendChild(label)
+    inputContainer.appendChild(document.createElement('br')) // Add a line break for better spacing
+  }
+
+  if (!container.querySelector('.input-container')) {
+    container.appendChild(inputContainer)
+  }
 }

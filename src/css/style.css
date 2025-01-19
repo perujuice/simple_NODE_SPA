@@ -2,6 +2,7 @@
 @import url('window.css');
 @import url('memory-game.css');
 @import url('chat.css');
+@import url('quiz.css');
 
 body, html {
     margin: 0;

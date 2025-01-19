@@ -13,9 +13,6 @@ export class QuizGame {
     this.gameStarted = false
   }
 
-  /**
-   * Load the quiz game UI.
-   */
   loadQuiz () {
     const header = document.createElement('h1')
     header.id = 'Header'
@@ -33,11 +30,13 @@ export class QuizGame {
     inputContainer.appendChild(nickNameInput)
 
     const startButton = document.createElement('button')
+    startButton.className = 'quiz-button'
     startButton.id = 'quiz-button'
     startButton.textContent = 'Start Quiz'
     this.container.appendChild(startButton)
 
     const highScoresButton = document.createElement('button')
+    highScoresButton.className = 'quiz-button'
     highScoresButton.id = 'high-scores-button'
     highScoresButton.textContent = 'View High Scores'
     this.container.appendChild(highScoresButton)
@@ -46,9 +45,6 @@ export class QuizGame {
     highScoresButton.addEventListener('click', () => Game.displayHighScores())
   }
 
-  /**
-   * Start the quiz game.
-   */
   async startQuiz () {
     if (this.gameStarted) return
     this.gameStarted = true
@@ -64,32 +60,66 @@ export class QuizGame {
 
     const answerInput = this.createAnswerInputField(inputContainer)
 
-    // Replace Start Quiz button functionality
     const startButton = this.container.querySelector('#quiz-button')
     startButton.textContent = 'Submit Answer'
 
-    // Start the timer
+    const nextButton = document.createElement('button')
+    nextButton.className = 'quiz-button'
+    nextButton.id = 'next-button'
+    nextButton.textContent = 'Next Question'
+    nextButton.style.display = 'none' // Initially hidden
+    this.container.appendChild(nextButton)
+
     if (this.timerInterval) Time.stopTimer(this.timerInterval)
     this.timerInterval = this.timeUpCallback()
 
     this.startTime = new Date()
 
     startButton.onclick = async () => {
+      answerInput.style.display = 'none'
+      startButton.style.display = 'none'
+      nextButton.style.display = 'block'
+
+      Time.stopTimer(this.timerInterval)
+      this.timerInterval = null
+
       const selectedAlternative = this.container.querySelector('input[name="alternative"]:checked')
       const answer = selectedAlternative ? selectedAlternative.value : answerInput.value
 
       const result = await Game.handleAnswerSubmission(answer, this.nextURL, this.startTime, this.user.name)
+      const status = result.status
       this.nextURL = result.data.nextURL
+      this.clearInputContainer()
 
-      if (result.status === 200) {
+      if (status === 200) {
         console.log('Correct answer')
         if (!this.nextURL) {
           console.log('End of game')
+          this.endGame('Congratulations! You have completed the quiz.')
         }
-      } else {
+      } else if (status === 400) {
         console.log('Incorrect answer')
-        this.endGame()
+        this.endGame('No more questions for you! 😠')
+        nextButton.style.display = 'none'
       }
+    }
+
+    nextButton.onclick = async () => {
+      nextButton.style.display = 'none'
+      startButton.style.display = 'block'
+
+      if (this.timerInterval) Time.stopTimer(this.timerInterval)
+      const result = await Game.displayQuestion(this.nextURL)
+      this.timerInterval = this.timeUpCallback()
+
+      if (result.alternatives) {
+        Game.displayAlternatives(result.alternatives, this.container)
+      } else {
+        this.reuseInputField(inputContainer, answerInput)
+        answerInput.style.display = 'block'
+      }
+
+      this.nextURL = result.nextURL
     }
   }
 
@@ -99,9 +129,6 @@ export class QuizGame {
     return inputContainer
   }
 
-  /**
-   * Display a welcome message.
-   */
   displayWelcomeMessage () {
     const header = this.container.querySelector('#Header')
     header.textContent = `Welcome ${this.user.name}!`
@@ -114,6 +141,10 @@ export class QuizGame {
     answerInput.placeholder = 'Enter your answer'
     inputContainer.appendChild(answerInput)
     return answerInput
+  }
+
+  reuseInputField (inputContainer, answerInput) {
+    inputContainer.appendChild(answerInput)
   }
 
   timeUpCallback () {
