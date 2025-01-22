@@ -3,6 +3,9 @@ import * as Time from './quiz-modules/timer.js'
 import * as Game from './quiz-modules/Game.js'
 import User from './quiz-modules/User.js'
 
+/**
+ * Class representing the Quiz Game.
+ */
 export class QuizGame {
   constructor (container) {
     this.container = container // The parent container for the quiz game
@@ -13,38 +16,54 @@ export class QuizGame {
     this.gameStarted = false
   }
 
+  /**
+   * Load the quiz game.
+   */
   loadQuiz () {
+    // Create the header element
     const header = document.createElement('h1')
     header.id = 'Header'
+    header.style.textAlign = 'center' // Center the header
     header.textContent = 'Welcome to the Quiz Game!'
     this.container.appendChild(header)
 
+    // Create the input container
     const inputContainer = document.createElement('div')
     inputContainer.className = 'input-container'
     this.container.appendChild(inputContainer)
 
+    // Create the nickname input field
     const nickNameInput = document.createElement('input')
     nickNameInput.type = 'text'
     nickNameInput.id = 'nick-name'
     nickNameInput.placeholder = 'Enter your nickname'
     inputContainer.appendChild(nickNameInput)
 
+    // Create the start button container
+    const buttonContainer = document.createElement('div')
+    buttonContainer.className = 'button-container'
+    this.container.appendChild(buttonContainer)
+
+    // Create the start button
     const startButton = document.createElement('button')
     startButton.className = 'quiz-button'
     startButton.id = 'quiz-button'
     startButton.textContent = 'Start Quiz'
-    this.container.appendChild(startButton)
+    buttonContainer.appendChild(startButton)
 
     const highScoresButton = document.createElement('button')
     highScoresButton.className = 'quiz-button'
     highScoresButton.id = 'high-scores-button'
     highScoresButton.textContent = 'View High Scores'
-    this.container.appendChild(highScoresButton)
+    buttonContainer.appendChild(highScoresButton)
 
     startButton.addEventListener('click', () => this.startQuiz())
     highScoresButton.addEventListener('click', () => Game.displayHighScores())
   }
 
+  /**
+   * Start the quiz game.
+   */
   async startQuiz () {
     if (this.gameStarted) return
     this.gameStarted = true
@@ -123,17 +142,29 @@ export class QuizGame {
     }
   }
 
+  /**
+   * Clear the input container.
+   * @returns {HTMLElement} The input container
+   */
   clearInputContainer () {
     const inputContainer = this.container.querySelector('.input-container')
     inputContainer.innerHTML = ''
     return inputContainer
   }
 
+  /**
+   * Display the welcome message.
+   */
   displayWelcomeMessage () {
     const header = this.container.querySelector('#Header')
     header.textContent = `Welcome ${this.user.name}!`
   }
 
+  /**
+   * Create the answer input field.
+   * @param {HTMLElement} inputContainer The input container.
+   * @returns {HTMLElement} The answer input field.
+   */
   createAnswerInputField (inputContainer) {
     const answerInput = document.createElement('input')
     answerInput.type = 'text'
@@ -143,16 +174,29 @@ export class QuizGame {
     return answerInput
   }
 
+  /**
+   * Reuse the input field.
+   * @param {HTMLElement} inputContainer The input container.
+   * @param {HTMLElement} answerInput The answer input field.
+   */
   reuseInputField (inputContainer, answerInput) {
     inputContainer.appendChild(answerInput)
   }
 
+  /**
+   * The time up callback function.
+   * @returns {number} The timer interval.
+   */
   timeUpCallback () {
     return Time.startTimer(10, () => {
       this.endGame('Time’s up! Game over.')
     })
   }
 
+  /**
+   * End the game.
+   * @param {string} message The message to display when the game ends.
+   */
   endGame (message = 'Game over.') {
     const header = this.container.querySelector('#Header')
     header.textContent = message

@@ -1,4 +1,5 @@
 .quiz-game-container {
+  font-family: 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,7 +26,8 @@
 }
 
 .quiz-button {
-  padding: 10px 20px;
+  padding: 10px 10px;
+  margin: 5px 0; /* top and bottom margin */
   background-color: white;
   color: rgb(82, 82, 240);
   border: none;
@@ -36,4 +38,12 @@
 .quiz-button:hover {
   background-color: black;
   color: white;
+}
+
+/*Placed the buttons in a container to try to control their placement better */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
