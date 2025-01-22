@@ -82,6 +82,9 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
     tiles.push(tile) // Add the tile to the tiles array
   })
 
+  const gameWindow = container.closest('.custom-window')
+  const timerInterval = setInterval(updateStatusPanel, 1000)
+
   let currentIndex = 0 // Initialize the current index for keyboard navigation
   tiles[currentIndex].focus() // Focus on the first tile
 
@@ -159,6 +162,12 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
   function handleKeyboardNavigation (event) {
     const { key } = event
     const totalTiles = tiles.length
+
+    // Allow browser shortcuts
+    if (event.ctrlKey || event.altKey || event.metaKey || ['F12', 'F5'].includes(key)) {
+      return
+    }
+
     // Prevent default behavior to stop it from affecting other UI elements like headers
     event.preventDefault()
 
@@ -191,6 +200,20 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
   // Listen for arrow key presses to navigate the tiles
   document.addEventListener('keydown', handleKeyboardNavigation)
 
-  const timerInterval = setInterval(updateStatusPanel, 1000)
+  /**
+   * Add or remove keyboard navigation when the game window gains or loses focus.
+   * @param {boolean} enable - Whether to enable or disable navigation.
+   */
+  function toggleKeyboardNavigation (enable) {
+    if (enable) {
+      document.addEventListener('keydown', handleKeyboardNavigation)
+    } else {
+      document.removeEventListener('keydown', handleKeyboardNavigation)
+    }
+  }
+
+  // Attach event listeners to manage focus and keyboard navigation
+  gameWindow.addEventListener('focusin', () => toggleKeyboardNavigation(true))
+  gameWindow.addEventListener('focusout', () => toggleKeyboardNavigation(false))
   updateStatusPanel() // Initialize status panel immediately
 }
