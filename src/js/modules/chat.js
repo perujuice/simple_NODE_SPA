@@ -131,22 +131,29 @@ export class ChatApp {
   receiveMessage (message) {
     if (message.type === 'notification') {
       // Display notification messages as system messages
-      this.addSystemMessageToDisplay(`Server: ${message.data}`)
+      this.addSystemMessageToDisplay(`Server: ${message.data}`, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
     } else if (message.type === 'message') {
-      // Display regular chat messages
-      this.addMessageToDisplay(message)
+      // Display regular chat messages with a local timestamp
+      this.addMessageToDisplay({
+        ...message, // Copy all properties from the message object using the spread operator
+        localTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      })
     }
   }
 
   /**
-   * Add a system message to the display.
-   * @param {string} messageText - The system message text to display.
+   * Add a message to the display and instance's message history.
+   * @param {object} message - The message object to display.
    */
-  addSystemMessageToDisplay (messageText) {
+  addMessageToDisplay (message) {
+    this.messages.push(message) // Add to instance's message list
+
     const messageArea = this.container.querySelector('.messages-area')
     const messageElement = document.createElement('div')
-    messageElement.className = 'message system-message'
-    messageElement.innerText = messageText
+    messageElement.className = 'message'
+
+    const time = message.localTimestamp || 'Unknown Time' // Use local timestamp or fallback
+    messageElement.innerText = `[${time}] ${message.username}: ${message.data}`
 
     messageArea.appendChild(messageElement)
 
@@ -155,16 +162,17 @@ export class ChatApp {
   }
 
   /**
-   * Add a message to the display and instance's message history.
-   * @param {*} message - The message object to display.
+   * Add a system message to the display.
+   * @param {string} messageText - The system message text to display.
+   * @param {string} timestamp - The timestamp to display.
    */
-  addMessageToDisplay (message) {
-    this.messages.push(message) // Add to instance's message list
-
+  addSystemMessageToDisplay (messageText, timestamp) {
     const messageArea = this.container.querySelector('.messages-area')
     const messageElement = document.createElement('div')
-    messageElement.className = 'message'
-    messageElement.innerText = `${message.username}: ${message.data}`
+    messageElement.className = 'message system-message'
+
+    messageElement.innerText = `[${timestamp}] ${messageText}`
+
     messageArea.appendChild(messageElement)
 
     // Scroll to the latest message
