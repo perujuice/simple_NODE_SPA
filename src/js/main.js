@@ -54,8 +54,6 @@ function openWindow (appName, appIcon) {
   newWindow.querySelector('.close-button').addEventListener('click', () => {
     newWindow.remove()
   })
-
-  // Load the app based on the app name
   // Load the app based on the app name
   if (appName === 'Memory Game') {
     const memoryGameContainer = document.createElement('div')
@@ -68,6 +66,7 @@ function openWindow (appName, appIcon) {
 
     // Initialize the memory game with the dropdown menu
     initializeMemoryGame(memoryGameContainer, statusPanel)
+
     // Load the chat app based on the app name.
   } else if (appName === 'Chat') {
     const chatContainer = document.createElement('div')
@@ -75,8 +74,8 @@ function openWindow (appName, appIcon) {
     newWindow.querySelector('.window-content').appendChild(chatContainer)
 
     // Create the ChatApp instance for this window
-    const chat = new ChatApp(chatContainer)
-    chat.displayMessages()
+    createChatApp(chatContainer)
+
     // Load the quiz game based on the app name.
   } else if (appName === 'Quiz Game') {
     const quizGameContainer = document.createElement('div')
@@ -96,6 +95,15 @@ function openWindow (appName, appIcon) {
     const quizGame = new QuizGame(quizGameContainer)
     quizGame.loadQuiz()
   }
+}
+
+/**
+ * Factory function to create and initialize a ChatApp instance.
+ * @param {HTMLElement} container - The container for the chat application.
+ * @returns {ChatApp} The created ChatApp instance.
+ */
+function createChatApp (container) {
+  return new ChatApp(container)
 }
 
 /**
@@ -119,9 +127,6 @@ function addDragAndDropHandlers (newWindow) {
     event.dataTransfer.effectAllowed = 'move'
 
     bringWindowToFront(newWindow)
-
-    console.log('DRAG START')
-    console.log(event)
   })
 
   // Using dragend instead of drop since drop is not fired when dragging outside the window.
@@ -130,8 +135,6 @@ function addDragAndDropHandlers (newWindow) {
     newWindow.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px'
     newWindow.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px'
 
-    console.log('DRAG END')
-    console.log(event)
     event.preventDefault()
   })
 

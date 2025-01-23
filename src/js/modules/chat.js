@@ -1,19 +1,35 @@
-// chat.js
 import { WebSocketHandler } from './websocket.js'
-import * as storage from './storage.js'
 
+/**
+ * A simple chat application class.
+ */
 export class ChatApp {
+  /**
+   * Create a new chat application.
+   * @param {HTMLElement} container - The container element for the chat.
+   */
   constructor (container) {
     this.container = container
-    this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket')
-    this.username = storage.getUsername() || prompt('Enter your username:')
-    storage.setUsername(this.username)
+    this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket') // Shared WebSocket instance
+    this.username = localStorage.getItem('username') || prompt('Enter your username:') // Prompt for username if not set
+    localStorage.setItem('username', this.username) // Save the username globally
 
-    this.websocket.connect()
-    this.websocket.onMessage = this.receiveMessage.bind(this) // Set the callback for receiving messages
+    this.messages = [] // Maintain independent messages for this instance
+
+    this.websocket.connect() // Connect to the WebSocket
+    this.receiveMessage = this.receiveMessage.bind(this) // Bind the message handler to this instance
+    this.websocket.addMessageListener(this.receiveMessage) // Register as a listener
     this.initUI()
+
+    // Clean up when the window is closed
+    this.container.closest('.custom-window').querySelector('.close-button').addEventListener('click', () => {
+      this.websocket.removeMessageListener(this.receiveMessage) // Remove WebSocket listener for this instance
+    })
   }
 
+  /**
+   * Initialize the chat UI.
+   */
   initUI () {
     // Create the chat UI
     const messageArea = document.createElement('div')
@@ -29,6 +45,7 @@ export class ChatApp {
     sendButton.innerText = 'Send'
     this.container.appendChild(sendButton)
 
+    // Add a click event listener to the send button to send messages
     sendButton.addEventListener('click', () => {
       this.sendMessage(textarea.value)
       textarea.value = ''
@@ -49,70 +66,43 @@ export class ChatApp {
    * @param {*} text - The message text to send.
    */
   sendMessage (text) {
+    if (!text.trim()) return // Prevent sending empty messages
+
     const message = {
       type: 'message',
       data: text,
       username: this.username,
-      channel: 'general', // Channel could be dynamic if needed
+      channel: 'my, not so secret, channel',
       key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd' // API key
     }
+
     this.websocket.sendMessage(message) // Send the message to the WebSocket
   }
 
   /**
-   * Receive a message and display it in the chat.
+   * Receive a message from the WebSocket and display it in the chat.
    * @param {*} message - The message object received from the WebSocket.
    */
   receiveMessage (message) {
-    const messageArea = this.container.querySelector('.messages-area')
-
-    // Create a new element for the message
-    const messageElement = document.createElement('div')
-    messageElement.className = 'message'
-    messageElement.innerText = `${message.username}: ${message.data}`
-
-    // Append the new message element to the message area
-    messageArea.appendChild(messageElement)
-
-    // Log the received message
-    console.log('Received message:', message)
-
-    // Retrieve messages from localStorage to display last 20 messages
-    let messages = storage.getMessages()
-
-    // Add the new message to the stored messages
-    messages.push(message)
-
-    // Keep only the last 20 messages
-    if (messages.length > 20) {
-      messages = messages.slice(-20)
+    if (message.type === 'message') {
+      this.addMessageToDisplay(message) // Display the message in this instance
     }
-
-    // Store the updated list of messages in localStorage
-    storage.setMessages(messages)
-
-    // Display the last 20 messages in the chat window
-    this.displayMessages()
   }
 
   /**
-   * Display the last 20 messages in the chat window.
+   * Add a message to the display and instance's message history.
+   * @param {*} message - The message object to display.
    */
-  displayMessages () {
+  addMessageToDisplay (message) {
+    this.messages.push(message) // Add to instance's message list
+
     const messageArea = this.container.querySelector('.messages-area')
+    const messageElement = document.createElement('div')
+    messageElement.className = 'message'
+    messageElement.innerText = `${message.username}: ${message.data}`
+    messageArea.appendChild(messageElement)
 
-    // Retrieve messages from localStorage
-    const messages = storage.getMessages()
-
-    // Clear the message area before re-populating it
-    messageArea.innerHTML = ''
-
-    // Append the last 20 messages to the message area
-    messages.forEach(message => {
-      const messageElement = document.createElement('div')
-      messageElement.className = 'message'
-      messageElement.innerText = `${message.username}: ${message.data}`
-      messageArea.appendChild(messageElement)
-    })
+    // Scroll to the latest message
+    messageArea.scrollTop = messageArea.scrollHeight
   }
 }
