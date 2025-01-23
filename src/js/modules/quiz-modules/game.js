@@ -49,7 +49,7 @@ export async function handleAnswerSubmission (answer, nextURL, nickname) {
         console.log(`Congratulations ${nickname}! You completed the game in ${timeTaken} seconds.`)
       }
 
-      displayEndGameButtons(document.querySelector('.container'))
+      displayEndGameButtons()
     }
 
     return response
@@ -74,19 +74,16 @@ export function displayHighScores () {
 
 /**
  * Display buttons for restarting the game or viewing high scores.
- * @param {HTMLElement} container The container to display buttons in.
  */
-export function displayEndGameButtons (container) {
-  const buttonContainer = container.querySelector('.button-container') || UIHelper.createDiv('button-container')
-  UIHelper.clearContainer(buttonContainer)
+export function displayEndGameButtons () {
+  const buttonContainer = UIHelper.clearContainer('button-container')
 
+  // Add restart and high scores buttons
   const restartButton = UIHelper.createButton('Restart Game', 'button', () => location.reload())
   const highScoresButton = UIHelper.createButton('View High Scores', 'button', displayHighScores)
 
   buttonContainer.appendChild(restartButton)
   buttonContainer.appendChild(highScoresButton)
-
-  container.appendChild(buttonContainer)
 }
 
 /**

@@ -23,18 +23,32 @@ export class QuizGame {
    */
   loadQuiz () {
     const header = UIHelper.createHeader('Welcome to the Quiz Game!')
+    const questionContainer = UIHelper.createDiv('question-container')
     const inputContainer = UIHelper.createDiv('input-container')
     const buttonContainer = UIHelper.createDiv('button-container')
+    const timerElement = UIHelper.createDiv('timer-container')
 
     const nickNameInput = UIHelper.createInputField('nick-name', 'Enter your nickname')
+    const question = document.createElement('div')
+    question.id = 'question'
     const startButton = UIHelper.createButton('Start Quiz', 'quiz-button', () => this.startQuiz())
     const highScoresButton = UIHelper.createButton('View High Scores', 'quiz-button', Game.displayHighScores)
+    const timer = document.createElement('div')
+    timer.id = 'timer'
 
     inputContainer.appendChild(nickNameInput)
+    questionContainer.appendChild(question)
     buttonContainer.appendChild(startButton)
     buttonContainer.appendChild(highScoresButton)
+    timerElement.appendChild(timer)
 
-    UIHelper.clearAndAppend(this.container, [header, inputContainer, buttonContainer])
+    UIHelper.clearAndAppend(this.container, [
+      header,
+      questionContainer,
+      inputContainer,
+      buttonContainer,
+      timerElement
+    ])
   }
 
   /**
@@ -52,19 +66,15 @@ export class QuizGame {
     this.user.name = UIHelper.getInputValue('nick-name')
     UIHelper.updateHeaderText(this.container, `Welcome ${this.user.name}!`)
 
+    const questionElement = document.getElementById('question')
     const inputContainer = UIHelper.clearContainer('input-container')
-    const questionContainer = UIHelper.createDiv('question-container')
-    const question = document.createElement('div')
-    question.id = 'question'
-    questionContainer.appendChild(question)
-
-    const timerElement = document.createElement('div')
-    timerElement.id = 'timer'
-    this.container.appendChild(questionContainer)
-    this.container.appendChild(timerElement)
+    // const timerElement = document.getElementById('timer')
 
     const response = await Game.startGame()
     this.state.nextURL = Fetch.getNextUrl(response)
+
+    // Update question text
+    questionElement.innerHTML = Fetch.getQuestion(response)
 
     const answerInput = UIHelper.createInputField('answer-input', 'Enter your answer')
     inputContainer.appendChild(answerInput)
@@ -164,6 +174,7 @@ export class QuizGame {
         if (this.state.nextURL) {
           // Show a "Next Question" button
           UIHelper.hideElement(submitButton)
+          UIHelper.hideElement(answerInput)
           const nextButton = UIHelper.createButton('Next Question', 'quiz-button', async () => {
             UIHelper.hideElement(nextButton) // Hide the next button after clicking
             submitButton.style.display = 'block' // Show the submit button
@@ -173,6 +184,7 @@ export class QuizGame {
         } else {
           // End the game if no nextURL is provided
           this.endGame('Congratulations! You have completed the quiz.')
+          UIHelper.hideElement(submitButton)
         }
       } else {
         this.endGame('No more questions for you! 😠')
@@ -210,12 +222,6 @@ export class QuizGame {
     if (!inputContainer.contains(alternativesContainer)) {
       inputContainer.appendChild(alternativesContainer)
     }
-
-    // Ensure the submit button is visible and not removed
-    submitButton.style.display = 'block'
-    if (!inputContainer.contains(submitButton)) {
-      inputContainer.appendChild(submitButton)
-    }
   }
 
   /**
@@ -223,6 +229,7 @@ export class QuizGame {
    * @param {string} message The message to display.
    */
   endGame (message) {
+    console.log('Game over:', message)
     UIHelper.updateHeaderText(this.container, message)
     Game.displayEndGameButtons(this.container)
 

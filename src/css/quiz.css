@@ -1,49 +1,154 @@
+/* Quiz Game Container */
 .quiz-game-container {
   font-family: 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 70vh;
+  justify-content: space-between; /* Spread elements evenly */
+  width: 200px;
+  height: 330px;
   background-color: rgb(82, 82, 240);
   color: white;
+  text-align: center; /* Center-align text */
+  padding: 5px; /* Add some internal spacing */
+  box-sizing: border-box; /* Include padding in total size */
+  border-radius: 5px; /* Match .custom-window corners */
+  overflow-wrap: break-word; /* Handle long text by breaking it */
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
+/* Question Container */
 .question-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin: 5px 0; /* Tighten spacing */
+  font-size: 0.9rem; /* Slightly smaller text for compact display */
+  font-weight: bold; /* Emphasize the question */
 }
 
+#question {
+  font-size: 0.9rem; /* Slightly larger font for the question */
+  font-weight: bold; /* Makes the question stand out */
+  margin-bottom: 10px; /* Adds space below the question */
+}
+
+/* Styling the input container */
 .input-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
+  flex-direction: column; /* Stack the input fields vertically */
+  align-items: center; /* Center the content horizontally */
+  gap: 10px; /* Add spacing between inputs */
+  width: 100%; /* Ensure the input container fits the parent width */
+  box-sizing: border-box; /* Include padding and border in the width */
 }
 
+/* Timer Container */
+.timer-container {
+  font-size: 1.2rem; /* Larger text for the timer */
+  font-weight: bold;
+  margin-top: 10px; /* Adds spacing above the timer */
+}
+
+/* Buttons */
 .quiz-button {
-  padding: 10px 10px;
-  margin: 5px 0; /* top and bottom margin */
+  padding: 5px 10px; /* Compact button size */
+  margin: 4px 0; /* Tighten button spacing */
   background-color: white;
   color: rgb(82, 82, 240);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 0.9rem; /* Smaller button text */
+  font-weight: bold;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: all 0.2s ease; /* Smooth hover transition */
 }
 
 .quiz-button:hover {
   background-color: black;
   color: white;
+  transform: translateY(-1px); /* Minimal lift effect */
 }
 
-/*Placed the buttons in a container to try to control their placement better */
+.button {
+  padding: 5px 10px; /* Compact button size */
+  margin: 4px 0; /* Tighten button spacing */
+  background-color: white;
+  color: rgb(82, 82, 240);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem; /* Smaller button text */
+  font-weight: bold;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: all 0.2s ease; /* Smooth hover transition */
+}
+
+.button:hover {
+  background-color: black;
+  color: white;
+  transform: translateY(-1px); /* Minimal lift effect */
+}
+
+/* Button Container */
 .button-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 5px; /* Small spacing between buttons */
+}
+
+/* High Scores List */
+.high-scores-list {
+  font-size: 0.8rem; /* Compact text for high scores */
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* Header */
+.quiz-game-container h1 {
+  font-size: 1rem; /* Compact header text */
+  margin: 5px 0; /* Reduce spacing */
+}
+
+/*Add a hover effect to the quiz container because its cool */
+.quiz-game-container:hover {
+  background-color: rgb(72, 72, 220);
+  transition: background-color 0.3s ease; /* Smooth color transition */
+}
+
+/* Styling the alternatives container */
+.alternatives-container {
+  display: flex;
+  flex-direction: column; /* Stack radio buttons vertically */
+  align-items: flex-start; /* Align items to the left */
+  gap: 8px; /* Add spacing between alternatives */
+  width: 100%; /* Make the container take up full width of the parent */
+  box-sizing: border-box; /* Include padding and border in the width */
+  overflow: hidden; /* Prevent overflow of the container */
+}
+
+/* Styling individual labels */
+.alternatives-container label {
+  display: flex; /* Use flexbox for alignment */
+  align-items: flex-start; /* Align the radio button and multi-line text */
+  gap: 8px; /* Space between the radio button and text */
+  word-wrap: break-word; /* Break long words */
+  white-space: normal; /* Allow text to wrap to the next line */
+  overflow: hidden; /* Prevent any overflow */
+  width: calc(100% - 24px); /* Ensure label text stays within container padding */
+  max-width: 100%; /* Prevent label from exceeding container width */
+  box-sizing: border-box; /* Include padding and border in the width */
+}
+
+/* Styling the radio buttons */
+.alternatives-container input[type="radio"] {
+  flex-shrink: 0; /* Prevent the radio button from shrinking */
+  margin-top: 4px; /* Align the radio button with the first line of text */
 }
