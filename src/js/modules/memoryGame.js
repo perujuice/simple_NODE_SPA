@@ -1,4 +1,4 @@
-export { startMemoryGame }
+export { initializeMemoryGame }
 
 // To be replaced for more appropriate images.
 const imageFiles = [
@@ -13,6 +13,45 @@ const imageFiles = [
 ]
 
 /**
+ * Initialize the memory game with the dropdown menu to select the board size.
+ * @param {*} container - The container where the game will be rendered.
+ * @param {*} statusPanel - The status panel where the game status will be displayed.
+ */
+function initializeMemoryGame (container, statusPanel) {
+  // Clear any existing content
+  container.innerHTML = ''
+  statusPanel.style.visibility = 'hidden'
+
+  // Create and display the welcome message
+  const welcomeMessage = document.createElement('p')
+  welcomeMessage.textContent = 'Welcome to the Memory Game! Please select the board size to start:'
+  container.appendChild(welcomeMessage)
+
+  // Create the dropdown menu for board size
+  const dropdown = document.createElement('select')
+  dropdown.id = 'boardSize'
+  const sizes = ['2x2', '2x4', '4x4']
+  sizes.forEach(size => {
+    const option = document.createElement('option')
+    option.value = size
+    option.textContent = size
+    dropdown.appendChild(option)
+  })
+  container.appendChild(dropdown)
+
+  // Create the "Start Game" button
+  const startButton = document.createElement('button')
+  startButton.textContent = 'Start Game'
+  container.appendChild(startButton)
+
+  // Handle the "Start Game" button click event
+  startButton.addEventListener('click', () => {
+    const [rows, cols] = dropdown.value.split('x').map(Number)
+    startMemoryGame(rows, cols, container, statusPanel)
+  })
+}
+
+/**
  * Start the memory game with the given number of rows and columns.
  * @param {*} rows The number of rows in the game board.
  * @param {*} cols The number of columns in the game board
@@ -20,6 +59,7 @@ const imageFiles = [
  * @param {*} statusPanel The status panel where the game status will be displayed.
  */
 function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
+  statusPanel.style.visibility = 'visible' // Show the status panel
   const totalTiles = rows * cols // Calculate the total number of tiles
   // Check if the total number of tiles is even
   // They have to be even since we always need pairs of tiles.

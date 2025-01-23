@@ -1,4 +1,4 @@
-import * as memoryGame from './modules/memoryGame.js'
+import { initializeMemoryGame } from './modules/memoryGame.js'
 import { ChatApp } from './modules/chat.js'
 import { QuizGame } from './modules/quizGame.js'
 
@@ -56,6 +56,7 @@ function openWindow (appName, appIcon) {
   })
 
   // Load the app based on the app name
+  // Load the app based on the app name
   if (appName === 'Memory Game') {
     const memoryGameContainer = document.createElement('div')
     const statusPanel = document.createElement('div')
@@ -65,7 +66,8 @@ function openWindow (appName, appIcon) {
     newWindow.querySelector('.window-content').appendChild(memoryGameContainer)
     newWindow.querySelector('.window-content').appendChild(statusPanel)
 
-    setTimeout(() => memoryGame.startMemoryGame(4, 4, memoryGameContainer, statusPanel), 0)
+    // Initialize the memory game with the dropdown menu
+    initializeMemoryGame(memoryGameContainer, statusPanel)
     // Load the chat app based on the app name.
   } else if (appName === 'Chat') {
     const chatContainer = document.createElement('div')

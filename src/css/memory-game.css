@@ -60,3 +60,40 @@
   color: #333;
 }
 
+/* Style for the welcome message */
+.memory-game-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+/* Style for the dropdown menu */
+.memory-game-container select {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Style for the start button */
+.memory-game-container button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.memory-game-container button:hover {
+  background-color: #0056b3;
+}
+
