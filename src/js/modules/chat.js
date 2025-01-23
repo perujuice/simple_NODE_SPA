@@ -1,8 +1,5 @@
 import { WebSocketHandler } from './websocket.js'
 
-/**
- * A simple chat application class.
- */
 export class ChatApp {
   /**
    * Create a new chat application.
@@ -10,20 +7,68 @@ export class ChatApp {
    */
   constructor (container) {
     this.container = container
-    this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket') // Shared WebSocket instance
-    this.username = localStorage.getItem('username') || prompt('Enter your username:') // Prompt for username if not set
-    localStorage.setItem('username', this.username) // Save the username globally
+    this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket') // Independent WebSocket instance
+    this.username = null // Username will be set after the prompt
 
     this.messages = [] // Maintain independent messages for this instance
 
+    this.initUI() // Initialize the chat UI
+
     this.websocket.connect() // Connect to the WebSocket
     this.receiveMessage = this.receiveMessage.bind(this) // Bind the message handler to this instance
-    this.websocket.addMessageListener(this.receiveMessage) // Register as a listener
-    this.initUI()
+    this.websocket.onMessage = this.receiveMessage // Register as a listener
+
+    this.showUsernamePrompt() // Show the username prompt
 
     // Clean up when the window is closed
     this.container.closest('.custom-window').querySelector('.close-button').addEventListener('click', () => {
-      this.websocket.removeMessageListener(this.receiveMessage) // Remove WebSocket listener for this instance
+      this.websocket.socket.close() // Close WebSocket connection for this instance
+    })
+  }
+
+  /**
+   * Show a username prompt inside the chat container.
+   */
+  showUsernamePrompt () {
+    const window = this.container.closest('.custom-window')
+    window.style.display = 'none'
+
+    const modal = document.createElement('div')
+    modal.className = 'username-modal'
+
+    const promptText = document.createElement('p')
+    promptText.textContent = 'Enter your username to start chatting:'
+
+    const input = document.createElement('input')
+    input.type = 'text'
+    input.placeholder = 'Enter your username'
+
+    const submitButton = document.createElement('button')
+    submitButton.textContent = 'Submit'
+
+    modal.appendChild(promptText)
+    modal.appendChild(input)
+    modal.appendChild(submitButton)
+    document.body.appendChild(modal)
+
+    // Handle saved username
+    const savedUsername = localStorage.getItem('username')
+    if (savedUsername) {
+      promptText.textContent = `Use saved username: "${savedUsername}"? Or enter a new one.`
+      input.value = savedUsername
+    }
+
+    // Handle submit
+    submitButton.addEventListener('click', () => {
+      const username = input.value.trim()
+      if (username) {
+        this.username = username
+        localStorage.setItem('username', username) // Save the username
+        modal.remove() // Remove the modal
+        window.style.display = 'block' // Show the chat window
+      } else {
+        alert('Please enter a valid username.')
+      }
     })
   }
 
@@ -81,12 +126,32 @@ export class ChatApp {
 
   /**
    * Receive a message from the WebSocket and display it in the chat.
-   * @param {*} message - The message object received from the WebSocket.
+   * @param {object} message - The message object received from the WebSocket.
    */
   receiveMessage (message) {
-    if (message.type === 'message') {
-      this.addMessageToDisplay(message) // Display the message in this instance
+    if (message.type === 'notification') {
+      // Display notification messages as system messages
+      this.addSystemMessageToDisplay(`Server: ${message.data}`)
+    } else if (message.type === 'message') {
+      // Display regular chat messages
+      this.addMessageToDisplay(message)
     }
+  }
+
+  /**
+   * Add a system message to the display.
+   * @param {string} messageText - The system message text to display.
+   */
+  addSystemMessageToDisplay (messageText) {
+    const messageArea = this.container.querySelector('.messages-area')
+    const messageElement = document.createElement('div')
+    messageElement.className = 'message system-message'
+    messageElement.innerText = messageText
+
+    messageArea.appendChild(messageElement)
+
+    // Scroll to the latest message
+    messageArea.scrollTop = messageArea.scrollHeight
   }
 
   /**
