@@ -35,6 +35,7 @@ export async function post (url, body = null) {
   }
   const response = await fetch(url, options)
   const data = await response.json()
+  console.log('response', response)
 
   return { data, status: response.status }
 }
@@ -44,7 +45,9 @@ export async function post (url, body = null) {
  * @param {JSON} response The json response.
  * @returns {string} The next URL.
  */
-export async function getNextUrl (response) {
+export function getNextUrl (response) {
+  console.log('Next URL: ', response.nextURL)
+  console.log('Response: ', response)
   return response.nextURL
 }
 
@@ -53,7 +56,7 @@ export async function getNextUrl (response) {
  * @param {*} response The json response.
  * @returns {*} The question.
  */
-export async function getQuestion (response) {
+export function getQuestion (response) {
   return response.question
 }
 
