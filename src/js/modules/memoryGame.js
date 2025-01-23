@@ -9,7 +9,7 @@ const imageFiles = [
   '/images/memory_flags/iceland.webp',
   '/images/memory_flags/poland.png',
   'images/memory_flags/pirate.png',
-  '/images/memory_flags/north_korea.svg'
+  '/images/memory_flags/sweden.webp'
 ]
 
 /**
@@ -119,15 +119,20 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
     // Check if the tiles match
     if (firstImageSrc === secondImageSrc) {
       matchedPairs++ // Increment the matched pairs
-      firstTile = null // Reset the first tile
-      secondTile = null // Reset the second tile
 
-      if (matchedPairs === totalTiles / 2) {
-        clearInterval(timerInterval)
-        setTimeout(() => {
-          updateStatusPanel(true)
-        }, 500) // Display a winning message
-      }
+      setTimeout(() => {
+        firstTile.style.visibility = 'hidden' // Hide the first tile
+        secondTile.style.visibility = 'hidden' // Hide the second tile
+        firstTile = null // Reset the first tile
+        secondTile = null // Reset the second tile
+
+        if (matchedPairs === totalTiles / 2) {
+          clearInterval(timerInterval)
+          setTimeout(() => {
+            updateStatusPanel(true)
+          }, 500) // Display a winning message
+        }
+      }, 800)
     } else {
       // If the tiles don't match, flip them back after a delay
       setTimeout(() => {
@@ -140,8 +145,8 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
   }
 
   /**
-   *
-   * @param {*} gameEnded Whether the game has ended or not.
+   * Update the status panel with the number of attempts and time elapsed.
+   * @param {boolean} gameEnded Whether the game has ended or not.
    */
   function updateStatusPanel (gameEnded = false) {
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000)
