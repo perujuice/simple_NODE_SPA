@@ -1,4 +1,5 @@
 import { WebSocketHandler } from './websocket.js'
+import EmojiButton from 'emoji-button'
 
 export class ChatApp {
   /**
@@ -31,7 +32,7 @@ export class ChatApp {
    */
   showUsernamePrompt () {
     const window = this.container.closest('.custom-window')
-    window.style.display = 'none'
+    window.style.vistibility = 'hidden' // Hide the chat window
 
     const modal = document.createElement('div')
     modal.className = 'username-modal'
@@ -65,7 +66,7 @@ export class ChatApp {
         this.username = username
         localStorage.setItem('username', username) // Save the username
         modal.remove() // Remove the modal
-        window.style.display = 'block' // Show the chat window
+        window.style.vistibility = 'visible' // Show the chat window
       } else {
         alert('Please enter a valid username.')
       }
@@ -81,23 +82,33 @@ export class ChatApp {
     messageArea.className = 'messages-area'
     this.container.appendChild(messageArea)
 
+    const inputContainer = document.createElement('div')
+    inputContainer.className = 'chat-input-container'
+    this.container.appendChild(inputContainer)
+
     const textarea = document.createElement('textarea')
     textarea.className = 'message-input'
-    this.container.appendChild(textarea)
+    inputContainer.appendChild(textarea)
 
-    const sendButton = document.createElement('button')
-    sendButton.className = 'send-button'
-    sendButton.innerText = 'Send'
-    this.container.appendChild(sendButton)
+    // Create the emoji button
+    const emojiButton = document.createElement('button')
+    emojiButton.className = 'emoji-button'
+    emojiButton.id = 'emoji-button'
+    emojiButton.innerText = '😊'
+    inputContainer.appendChild(emojiButton)
 
-    // Add a click event listener to the send button to send messages
-    sendButton.addEventListener('click', () => {
-      this.sendMessage(textarea.value)
-      textarea.value = ''
+    // Initialize the emoji picker
+    const picker = new EmojiButton()
+    picker.on('emoji', emoji => {
+      textarea.value += emoji // Add the selected emoji to the textarea
+    })
+
+    emojiButton.addEventListener('click', () => {
+      picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emojiButton)
     })
 
     // Add a keydown event listener to the textarea to send messages when Enter is pressed
-    textarea.addEventListener('keydown', (event) => {
+    textarea.addEventListener('keydown', event => {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault()
         this.sendMessage(textarea.value)

@@ -22,7 +22,6 @@
     cursor: grab; /* Indicate draggable behavior */
   }
 
-
 .window-logo {
     width: 24px;
     height: 24px;
@@ -32,14 +31,13 @@
 
 /* Window content */
 .window-content {
-    padding: 20px;
+    padding: 10px;
     font-size: 14px;
     color: #333;
     display: flex;
     flex-direction: column; /* Ensure the children are stacked vertically */
     justify-content: flex-start; /* Align items to the top */
     align-items: center; /* Optionally horizontally center the items */
-    height: 100% - 20px; /* Ensure the content takes up full height of the window */
 }
  
 
