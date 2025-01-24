@@ -6,6 +6,7 @@ import { QuizGame } from './modules/quizGame.js'
 window.addEventListener('load', main)
 
 let windowCounter = 0 // Counter to assign unique IDs to each window
+let lastWindowPosition = { x: null, y: null } // Track the last window position
 
 /**
  * Main entry point for the application.
@@ -42,18 +43,47 @@ function openWindow (appName, appIcon) {
 
   document.body.appendChild(newWindow)
 
-  // Randomize initial position
-  const x = Math.random() * (window.innerWidth - 250)
-  const y = Math.random() * (window.innerHeight - 300)
+  // Determine initial position
+  const windowWidth = 250
+  const windowHeight = 300
+
+  let x, y
+
+  if (windowCounter === 1) {
+    // Open the first window near the top-left corner (but not all the way)
+    x = 50 // 50px margin from the left edge
+    y = 50 // 50px margin from the top edge
+  } else {
+    // Stack subsequent windows slightly right and down
+    x = (lastWindowPosition.x || 50) + 30
+    y = (lastWindowPosition.y || 50) + 30
+
+    // Bounce back if the position exceeds the screen boundaries
+    if (x + windowWidth > window.innerWidth) x = 0
+    if (y + windowHeight > window.innerHeight) y = 50
+  }
+
+  // Save the current window position for the next window
+  lastWindowPosition = { x, y }
+
+  // Apply position to the new window
   newWindow.style.left = `${x}px`
   newWindow.style.top = `${y}px`
 
   // Add drag functionality
   addDragAndDropHandlers(newWindow)
+  bringWindowToFront(newWindow)
 
-  newWindow.querySelector('.close-button').addEventListener('click', () => {
+  // Add close button functionality
+  const closeButton = newWindow.querySelector('.close-button')
+  closeButton.addEventListener('click', () => {
     newWindow.remove()
+    // Reset lastWindowPosition if all windows are closed
+    if (!document.querySelectorAll('.custom-window').length) {
+      lastWindowPosition = { x: null, y: null }
+    }
   })
+
   // Load the app based on the app name
   if (appName === 'Memory Game') {
     const memoryGameContainer = document.createElement('div')
