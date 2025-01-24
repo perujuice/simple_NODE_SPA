@@ -98,7 +98,12 @@ export class ChatApp {
     inputContainer.appendChild(emojiButton)
 
     // Initialize the emoji picker
-    const picker = new EmojiButton()
+    const picker = new EmojiButton({
+      position: 'right', // Adjust picker position relative to the button
+      autoHide: false, // Prevent the picker from hiding automatically
+      i18n: { search: 'Search emojis' } // Customize the search input placeholder
+    })
+
     picker.on('emoji', emoji => {
       textarea.value += emoji // Add the selected emoji to the textarea
     })
