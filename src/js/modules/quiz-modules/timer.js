@@ -3,12 +3,13 @@ export { startTimer, stopTimer }
 /**
  * Method to start a timer, which will run for the given duration.
  * @param {number} duration The duration of the timer in seconds.
+ * @param {HTMLElement} container The container for the timer.
  * @param {Function} timeUpCallback The callback function to call when the time is up.
  * @returns {number} The interval ID of the timer
  */
-function startTimer (duration = 10, timeUpCallback) {
+function startTimer (duration = 10, container, timeUpCallback) {
   let timeLeft = duration
-  const timerElement = document.getElementById('timer')
+  const timerElement = container.querySelector('.timer')
   timerElement.innerHTML = `Time left: ${timeLeft}s`
 
   const timerInterval = setInterval(() => {
@@ -29,8 +30,9 @@ function startTimer (duration = 10, timeUpCallback) {
 /**
  * The method to stop the timer.
  * @param {number} timerInterval The interval ID of the timer.
+ * @param {HTMLElement} container The container for the timer.
  */
-function stopTimer (timerInterval) {
+function stopTimer (timerInterval, container) {
   clearInterval(timerInterval)
-  document.getElementById('timer').innerHTML = ''
+  container.querySelector('.timer').innerHTML = ''
 }

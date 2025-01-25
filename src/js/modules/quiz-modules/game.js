@@ -1,23 +1,23 @@
-// /modules/quiz-modules/Game.js
 import * as Fetch from './Fetch.js'
 import * as UIHelper from './UIHelper.js'
 import { QuizGame } from '../quizGame.js'
 
 /**
  * Start the game and return the server response.
+ * @param {HTMLElement} container The container for this game instance.
  * @returns {object} The server response.
  */
-export async function startGame () {
+export async function startGame (container) {
   try {
     const response = await Fetch.get('https://courselab.lnu.se/quiz/question/1')
-    const questionText = await Fetch.getQuestion(response)
+    const questionText = Fetch.getQuestion(response)
 
     // Display the first question
-    const questionElement = document.getElementById('question')
+    const questionElement = container.querySelector('.question')
     questionElement.innerHTML = `Question 1: ${questionText}`
 
     // Set the quiz start time
-    window.startTime = new Date()
+    container.dataset.startTime = new Date()
 
     return response
   } catch (error) {
@@ -31,30 +31,31 @@ export async function startGame () {
  * @param {string} answer The user's answer.
  * @param {string} nextURL The next question URL.
  * @param {string} nickname The user's nickname.
+ * @param {HTMLElement} container The container for this game instance.
  * @returns {object} The server response.
  */
-export async function handleAnswerSubmission (answer, nextURL, nickname) {
+export async function handleAnswerSubmission (answer, nextURL, nickname, container) {
   try {
     console.log('Submitting answer:', answer)
     const response = await Fetch.post(nextURL, { answer })
 
     // Display feedback for the submitted answer
-    displayAnswerMessage(response)
+    displayAnswerMessage(container, response)
 
     if (response.status === 200 && !response.data.nextURL) {
       // Game is complete
       const endTime = new Date()
-      const timeTaken = Math.round((endTime - window.startTime) / 1000)
+      const startTime = new Date(container.dataset.startTime)
+      const timeTaken = Math.round((endTime - startTime) / 1000)
       console.log('Time taken:', timeTaken)
       updateHighScores(nickname, timeTaken)
 
-      const questionElement = document.getElementById('Header')
-      if (questionElement) {
-        questionElement.innerHTML = `Congratulations ${nickname}! You completed the quiz game in ${timeTaken} seconds.`
-        console.log(`Congratulations ${nickname}! You completed the game in ${timeTaken} seconds.`)
+      const header = container.querySelector('.quiz-header')
+      if (header) {
+        header.innerHTML = `Congratulations ${nickname}! You completed the quiz game in ${timeTaken} seconds.`
       }
 
-      displayEndGameButtons()
+      displayEndGameButtons(container)
     }
 
     return response
@@ -66,67 +67,66 @@ export async function handleAnswerSubmission (answer, nextURL, nickname) {
 
 /**
  * Display the high scores from localStorage.
+ * @param {HTMLElement} container The container for this game instance.
  */
-export function displayHighScores () {
-  // Clear the quiz game container
-  const qContainer = UIHelper.clearContainer('quiz-game-container')
-  const header = UIHelper.createHeader('High Scores')
+export function displayHighScores (container) {
+  console.log(container)
+  const parent = container.closest('.window-content')
+  const qContainer = UIHelper.clearContainer(parent, 'quiz-game-container')
+  const header = UIHelper.createHeader('High Scores', 'quiz-header')
   qContainer.appendChild(header)
   header.innerHTML = 'High Scores'
 
-  // Retrieve high scores
   const highScores = getHighScores()
   console.log('High scores:', highScores)
 
-  // Create a container for the high score list
   const highScoreListContainer = UIHelper.createDiv('high-score-list-container')
-  const highScoreList = document.createElement('ul') // Create a <ul> element for the list
-  highScoreList.id = 'high-score-list' // Assign an ID for styling
+  const highScoreList = document.createElement('ul')
+  highScoreList.id = 'high-score-list'
   highScoreListContainer.appendChild(highScoreList)
 
-  // Populate the high score list
   if (highScores && highScores.length > 0) {
     highScoreList.innerHTML = highScores
-      .map(
-        (score, index) =>
-          `<li class="high-score-item">${index + 1}. ${score.nickname}: ${score.time}s</li>`
-      )
+      .map((score, index) => `<li class="high-score-item">${index + 1}. ${score.nickname}: ${score.time}s</li>`)
       .join('')
   } else {
-    // If no scores, display a message
     highScoreList.innerHTML = '<li class="high-score-item">No high scores yet!</li>'
   }
 
-  // Add a button to navigate back to the game
-  const backButton = UIHelper.createButton('Back to Game', 'button', () => backToQuiz())
-
-  // Append the high score list container to the question container
-  qContainer.appendChild(highScoreListContainer)
-  qContainer.appendChild(backButton)
+  const backButton = UIHelper.createButton('Back to Game', 'button', () => backToQuiz(container))
+  container.appendChild(highScoreListContainer)
+  container.appendChild(backButton)
 }
 
 /**
  * Navigate back to the quiz game.
+ * @param {HTMLElement} container The container for this game instance.
  */
-function backToQuiz () {
-  UIHelper.clearContainer('high-score-list-container')
-  const quizGameContainer = document.querySelector('.quiz-game-container')
-  const quizGame = new QuizGame(quizGameContainer)
+function backToQuiz (container) {
+  const parent = container.closest('.window-content')
+  UIHelper.clearContainer(parent, 'quiz-game-container')
+  const quizGame = new QuizGame(container)
   quizGame.loadQuiz()
 }
 
 /**
  * Display buttons for restarting the game or viewing high scores.
+ * @param {HTMLElement} container The container for this game instance.
  */
-export function displayEndGameButtons () {
-  const buttonContainer = UIHelper.clearContainer('button-container')
+export function displayEndGameButtons (container) {
+  const buttonContainer = UIHelper.createDiv('button-container')
+  UIHelper.clearContainer(container.querySelector('.button-container'))
 
-  // Add restart and high scores buttons
-  const restartButton = UIHelper.createButton('Restart Game', 'button', () => location.reload())
-  const highScoresButton = UIHelper.createButton('View High Scores', 'button', displayHighScores)
+  const restartButton = UIHelper.createButton('Restart Game', 'button', () => {
+    UIHelper.clearContainer(container)
+    const quizGame = container.quizGameInstance
+    if (quizGame) quizGame.loadQuiz()
+  })
+  const highScoresButton = UIHelper.createButton('View High Scores', 'button', () => displayHighScores(container))
 
   buttonContainer.appendChild(restartButton)
   buttonContainer.appendChild(highScoresButton)
+  container.appendChild(buttonContainer)
 }
 
 /**
@@ -134,7 +134,6 @@ export function displayEndGameButtons () {
  * @returns {Array} The high scores array.
  */
 function getHighScores () {
-  console.log('Retrieving high scores')
   return JSON.parse(localStorage.getItem('highScores')) || []
 }
 
@@ -146,7 +145,7 @@ function getHighScores () {
 function updateHighScores (nickname, timeTaken) {
   const highScores = getHighScores()
   highScores.push({ nickname, time: timeTaken })
-  highScores.sort((a, b) => a.time - b.time) // Sort by time (ascending)
+  highScores.sort((a, b) => a.time - b.time)
 
   if (highScores.length > 5) {
     highScores.pop() // Keep only the top 5 scores
@@ -157,11 +156,12 @@ function updateHighScores (nickname, timeTaken) {
 
 /**
  * Display a message for the answer feedback.
+ * @param {HTMLElement} container The container for this game instance.
  * @param {object} response The server response.
  */
-function displayAnswerMessage (response) {
+function displayAnswerMessage (container, response) {
   const message = Fetch.getAnswerMessage(response)
-  const questionElement = document.getElementById('question')
+  const questionElement = container.querySelector('.question')
   if (questionElement) {
     questionElement.innerHTML = message
   }

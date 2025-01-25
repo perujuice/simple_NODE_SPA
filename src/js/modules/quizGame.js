@@ -22,25 +22,22 @@ export class QuizGame {
    * Load the quiz game.
    */
   loadQuiz () {
-    const header = UIHelper.createHeader('Welcome to the Quiz Game!')
+    console.log(this.container)
+    const header = UIHelper.createHeader('Welcome to the Quiz Game!', 'quiz-header')
     const questionContainer = UIHelper.createDiv('question-container')
     const inputContainer = UIHelper.createDiv('input-container')
     const buttonContainer = UIHelper.createDiv('button-container')
     const timerElement = UIHelper.createDiv('timer-container')
 
     const nickNameInput = UIHelper.createInputField('nick-name', 'Enter your nickname')
-    const question = document.createElement('div')
-    question.id = 'question'
     const startButton = UIHelper.createButton('Start Quiz', 'quiz-button', () => this.startQuiz())
-    const highScoresButton = UIHelper.createButton('View High Scores', 'quiz-button', Game.displayHighScores)
-    const timer = document.createElement('div')
-    timer.id = 'timer'
+    const highScoresButton = UIHelper.createButton('View High Scores', 'quiz-button', () => Game.displayHighScores(this.container))
+    const timer = UIHelper.createDiv('timer')
+    timerElement.appendChild(timer)
 
     inputContainer.appendChild(nickNameInput)
-    questionContainer.appendChild(question)
     buttonContainer.appendChild(startButton)
     buttonContainer.appendChild(highScoresButton)
-    timerElement.appendChild(timer)
 
     UIHelper.clearAndAppend(this.container, [
       header,
@@ -54,42 +51,54 @@ export class QuizGame {
   /**
    * Start the quiz game.
    */
+  /**
+   * Start the quiz game.
+   */
   async startQuiz () {
     if (this.state.gameStarted) return
     this.state.gameStarted = true
 
-    const startButton = document.querySelector('.quiz-button')
+    // Hide the start and high scores buttons
+    const buttonContainer = this.container.querySelector('.button-container')
+    const startButton = buttonContainer.querySelector('.quiz-button')
+    const highScoresButton = buttonContainer.querySelector('.quiz-button:last-child')
     UIHelper.hideElement(startButton)
-    const highScoresButton = document.querySelector('.quiz-button:last-child')
     UIHelper.hideElement(highScoresButton)
 
-    this.user.name = UIHelper.getInputValue('nick-name')
+    this.user.name = UIHelper.getInputValue(this.container, 'nick-name')
     UIHelper.updateHeaderText(this.container, `Welcome ${this.user.name}!`)
 
-    const questionElement = document.getElementById('question')
-    const inputContainer = UIHelper.clearContainer('input-container')
+    // Clear the input container and prepare the question display
+    const questionContainer = this.container.querySelector('.question-container')
+    UIHelper.clearContainer(questionContainer) // Ensure the container is empty
 
-    const response = await Game.startGame()
+    // Dynamically create the question element within the scoped container
+    const questionElement = UIHelper.createDiv('question')
+    questionContainer.appendChild(questionElement)
+
+    const response = await Game.startGame(this.container) // Fetch the first question
     this.state.nextURL = Fetch.getNextUrl(response)
 
     // Update question text
     questionElement.innerHTML = Fetch.getQuestion(response)
 
+    // Create an input field and submit button for the answer
+    const inputContainer = UIHelper.clearContainer(this.container, 'input-container')
     const answerInput = UIHelper.createInputField('answer-input', 'Enter your answer')
     inputContainer.appendChild(answerInput)
 
     const submitButton = UIHelper.createButton('Submit Answer', 'quiz-button', async () => {
-      const answer = UIHelper.getSelectedAnswer('alternative') || answerInput.value
-      const result = await Game.handleAnswerSubmission(answer, this.state.nextURL, this.user.name)
+      const answer = UIHelper.getSelectedAnswer(inputContainer, 'alternative') || answerInput.value
+      const result = await Game.handleAnswerSubmission(answer, this.state.nextURL, this.user.name, this.container)
 
       if (result.status === 200) {
-        // Stop the timer when the answer is correct
-        if (this.timerInterval) Time.stopTimer(this.timerInterval)
+      // Stop the timer when the answer is correct
+        if (this.timerInterval) Time.stopTimer(this.timerInterval, this.container)
 
         this.state.nextURL = Fetch.getNextUrl(result.data)
 
         if (this.state.nextURL) {
-          // Show a "Next Question" button to proceed
+        // Prepare for the next question
           UIHelper.hideElement(submitButton)
           UIHelper.hideElement(answerInput)
           const nextButton = UIHelper.createButton('Next Question', 'quiz-button', async () => {
@@ -100,7 +109,7 @@ export class QuizGame {
           })
           inputContainer.appendChild(nextButton)
         } else {
-          // End the game if no nextURL is provided
+        // End the game if no nextURL is provided
           this.endGame('Congratulations! You have completed the quiz.')
         }
       } else {
@@ -109,7 +118,9 @@ export class QuizGame {
     })
 
     inputContainer.appendChild(submitButton)
-    this.timerInterval = Time.startTimer(10, () => this.endGame('Time’s up! Game over.'))
+
+    // Start the timer
+    this.timerInterval = Time.startTimer(10, this.container, () => this.endGame('Time’s up! Game over.'))
   }
 
   /**
@@ -125,7 +136,7 @@ export class QuizGame {
     const response = await Fetch.get(this.state.nextURL) // Fetch the next question
     const questionText = Fetch.getQuestion(response) // Extract the question text
 
-    const questionElement = document.getElementById('question')
+    const questionElement = this.container.querySelector('.question')
     questionElement.innerHTML = questionText // Display the question
 
     this.state.nextURL = Fetch.getNextUrl(response) // Update the next URL
@@ -151,14 +162,14 @@ export class QuizGame {
     submitButton.onclick = async () => {
       // Determine the answer based on question type
       const answer =
-        UIHelper.getSelectedAnswer('alternative') || answerInput.value
+        UIHelper.getSelectedAnswer(inputContainer, 'alternative') || answerInput.value
 
       console.log('Answer:', answer)
       console.log('Submitting to URL:', this.state.nextURL)
 
-      const result = await Game.handleAnswerSubmission(answer, this.state.nextURL, this.user.name)
+      const result = await Game.handleAnswerSubmission(answer, this.state.nextURL, this.user.name, this.container)
 
-      if (this.timerInterval) Time.stopTimer(this.timerInterval) // Stop the timer
+      if (this.timerInterval) Time.stopTimer(this.timerInterval, this.container) // Stop the timer
 
       if (result.status === 200) {
         const alternativesContainer = inputContainer.querySelector('.alternatives-container')
@@ -190,7 +201,7 @@ export class QuizGame {
     }
 
     // Restart the timer for the new question
-    this.timerInterval = Time.startTimer(10, () => this.endGame('Time’s up! Game over.'))
+    this.timerInterval = Time.startTimer(10, this.container, () => this.endGame('Time’s up! Game over.'))
   }
 
   /**
@@ -231,7 +242,7 @@ export class QuizGame {
     UIHelper.updateHeaderText(this.container, message)
     Game.displayEndGameButtons(this.container)
 
-    if (this.timerInterval) Time.stopTimer(this.timerInterval)
+    if (this.timerInterval) Time.stopTimer(this.timerInterval, this.container)
     this.timerInterval = null
   }
 }

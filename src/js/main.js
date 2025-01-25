@@ -111,17 +111,23 @@ function openWindow (appName, appIcon) {
     const quizGameContainer = document.createElement('div')
     quizGameContainer.className = 'quiz-game-container'
     newWindow.querySelector('.window-content').appendChild(quizGameContainer)
+
+    // Create a unique question container for this instance
     const questionContainer = document.createElement('div')
-    const question = document.createElement('div')
     questionContainer.className = 'question-container'
-    question.id = 'question'
     quizGameContainer.appendChild(questionContainer)
+
+    // Add question display area
+    const question = document.createElement('div')
+    question.className = 'question'
     questionContainer.appendChild(question)
 
+    // Add timer display area
     const timer = document.createElement('div')
-    timer.id = 'timer'
+    timer.className = 'timer'
     quizGameContainer.appendChild(timer)
 
+    // Initialize a new QuizGame instance, scoped to this container
     const quizGame = new QuizGame(quizGameContainer)
     quizGame.loadQuiz()
   }

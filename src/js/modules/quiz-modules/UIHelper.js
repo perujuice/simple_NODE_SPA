@@ -1,20 +1,21 @@
 /**
- * Create a header element with text
- * @param {string} text the text to display
- * @returns {HTMLElement} the header element
+ * Create a header element with text.
+ * @param {string} text The text to display.
+ * @param {string} [className] Optional class name for the header.
+ * @returns {HTMLElement} The header element.
  */
-export function createHeader (text) {
+export function createHeader (text, className = '') {
   const header = document.createElement('h1')
-  header.id = 'Header'
   header.textContent = text
+  if (className) header.className = className // Apply optional class
   header.style.textAlign = 'center'
   return header
 }
 
 /**
- * Create a div element with a class name
- * @param {string} className The class name of the div
- * @returns {HTMLElement} the div element
+ * Create a div element with a class name.
+ * @param {string} className The class name of the div.
+ * @returns {HTMLElement} The div element.
  */
 export function createDiv (className) {
   const div = document.createElement('div')
@@ -23,41 +24,41 @@ export function createDiv (className) {
 }
 
 /**
- * Hide an element
- * @param {HTMLElement} element The element to hide
+ * Hide an element.
+ * @param {HTMLElement} element The element to hide.
  */
 export function hideElement (element) {
-  element.style.display = 'none'
+  if (element) element.style.display = 'none'
 }
 
 /**
  * Show an element.
- * @param {HTMLElement} element The element to show
+ * @param {HTMLElement} element The element to show.
  */
 export function showElement (element) {
-  element.style.display = 'block'
+  if (element) element.style.display = 'block'
 }
 
 /**
- * Create an input field
- * @param {string} id The id of the input field.
+ * Create an input field.
+ * @param {string} className The class name of the input field.
  * @param {string} placeholder The placeholder text.
- * @returns {HTMLElement} the input field
+ * @returns {HTMLElement} The input field.
  */
-export function createInputField (id, placeholder) {
+export function createInputField (className, placeholder) {
   const input = document.createElement('input')
   input.type = 'text'
-  input.id = id
+  input.className = className // Use class instead of ID
   input.placeholder = placeholder
   return input
 }
 
 /**
- * Create a button element
+ * Create a button element.
  * @param {string} text The text to display on the button.
  * @param {string} className The class name of the button.
  * @param {Function} onClick The function to call when the button is clicked.
- * @returns {HTMLElement} the button element
+ * @returns {HTMLElement} The button element.
  */
 export function createButton (text, className, onClick) {
   const button = document.createElement('button')
@@ -68,52 +69,59 @@ export function createButton (text, className, onClick) {
 }
 
 /**
- * Create a list item element
- * @param {HTMLElement} container The container to append the list item to
- * @param {HTMLElement} elements The elements to append to the container
+ * Clear the container and append new elements.
+ * @param {HTMLElement} container The container to clear and append to.
+ * @param {HTMLElement[]} elements The elements to append to the container.
  */
 export function clearAndAppend (container, elements) {
-  container.innerHTML = ''
-  elements.forEach((element) => container.appendChild(element))
+  if (!container) return
+  container.innerHTML = '' // Clear all content
+  elements.forEach((element) => container.appendChild(element)) // Append new elements
 }
 
 /**
- * Update the header text
- * @param {HTMLElement} container The container to update
- * @param {string} text The text to display
+ * Update the header text within a container.
+ * @param {HTMLElement} container The container containing the header.
+ * @param {string} text The text to display.
+ * @param {string} [className] Optional class name to identify the header.
  */
-export function updateHeaderText (container, text) {
-  const header = container.querySelector('#Header')
+export function updateHeaderText (container, text, className = '') {
+  const header = className
+    ? container.querySelector(`.${className}`)
+    : container.querySelector('h1')
   if (header) header.textContent = text
 }
 
 /**
- * Clear the container, if it exists
- * @param {string} className The class name of the container
- * @returns {HTMLElement} the container
+ * Clear a container by its class name within a parent container.
+ * @param {HTMLElement} parent The parent container to scope the query.
+ * @param {string} className The class name of the container to clear.
+ * @returns {HTMLElement} The cleared container.
  */
-export function clearContainer (className) {
-  const container = document.querySelector(`.${className}`)
+export function clearContainer (parent, className) {
+  const container = parent.querySelector(`.${className}`)
   if (container) container.innerHTML = ''
   return container
 }
 
 /**
- * Method to get the value of an input field
- * @param {string} id The id of the input field
- * @returns {string} the value of the input field
+ * Get the value of an input field.
+ * @param {HTMLElement} parent The parent container to scope the query.
+ * @param {string} className The class name of the input field.
+ * @returns {string} The value of the input field, or an empty string if not found.
  */
-export function getInputValue (id) {
-  const input = document.getElementById(id)
-  return input ? input.value : '' // Return the value if the input exists, if not return an empty string.
+export function getInputValue (parent, className) {
+  const input = parent.querySelector(`.${className}`)
+  return input ? input.value : ''
 }
 
 /**
- * Method to get the selected answer from a radio button group
- * @param {string} name The name of the radio button group
- * @returns {string} the value of the selected radio button
+ * Get the selected answer from a radio button group.
+ * @param {HTMLElement} parent The parent container to scope the query.
+ * @param {string} name The name of the radio button group.
+ * @returns {string} The value of the selected radio button, or an empty string if not found.
  */
-export function getSelectedAnswer (name) {
-  const selected = document.querySelector(`input[name="${name}"]:checked`)
+export function getSelectedAnswer (parent, name) {
+  const selected = parent.querySelector(`input[name="${name}"]:checked`)
   return selected ? selected.value : ''
 }
