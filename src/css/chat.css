@@ -154,3 +154,20 @@
 .emoji-picker { /* Assuming the picker uses this class */
   z-index: 1001; /* Place the emoji picker above the modal */
 }
+
+.message code {
+  background-color: #f4f4f4;
+  color: #c7254e;
+  font-family: monospace;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.message pre {
+  background-color: #f4f4f4;
+  color: #333;
+  font-family: monospace;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 8px 0;
+}

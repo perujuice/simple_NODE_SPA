@@ -123,11 +123,29 @@ export class ChatApp {
   }
 
   /**
-   * Send a message to the chat.
-   * @param {*} text - The message text to send.
+   * Send a message to the WebSocket.
+   * @param {string} text - The message text to send.
    */
   sendMessage (text) {
     if (!text.trim()) return // Prevent sending empty messages
+
+    // Process for block code (e.g., starts and ends with "code?")
+    if (text.includes('code?')) {
+      const parts = text.split(/code\?/) // Split text into normal and code parts
+      const formattedParts = parts.map((part, index) => {
+        if (index % 2 !== 0) {
+        // Odd parts are code blocks
+          return `<pre><code>${part.trim()}</code></pre>`
+        }
+        // Even parts are normal text
+        return part // Handle inline code
+      })
+
+      text = formattedParts.join('') // Combine all parts back together
+    } else {
+    // Handle only inline code if no block code is detected
+      text = text.replace(/code\?([^code?]+)code\?/g, '<code>$1</code>')
+    }
 
     const message = {
       type: 'message',
@@ -169,7 +187,7 @@ export class ChatApp {
     messageElement.className = 'message'
 
     const time = message.localTimestamp || 'Unknown Time' // Use local timestamp or fallback
-    messageElement.innerText = `[${time}] ${message.username}: ${message.data}`
+    messageElement.innerHTML = `[${time}] ${message.username}: ${message.data}`
 
     messageArea.appendChild(messageElement)
 
