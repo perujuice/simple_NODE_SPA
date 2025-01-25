@@ -113,7 +113,7 @@ export class QuizGame {
           this.endGame('Congratulations! You have completed the quiz.')
         }
       } else {
-        this.endGame('No more questions for you! 😠')
+        this.endGame('Wrong!!! No more questions for you! 😠')
       }
     })
 
@@ -196,7 +196,7 @@ export class QuizGame {
           UIHelper.hideElement(submitButton)
         }
       } else {
-        this.endGame('No more questions for you! 😠')
+        this.endGame('Wrong!!!! No more questions for you! 😠')
       }
     }
 
@@ -238,11 +238,19 @@ export class QuizGame {
    * @param {string} message The message to display.
    */
   endGame (message) {
-    console.log('Game over:', message)
-    UIHelper.updateHeaderText(this.container, message)
-    Game.displayEndGameButtons(this.container)
+    // Stop the timer and clear interval reference
+    if (this.timerInterval) {
+      Time.stopTimer(this.timerInterval, this.container)
+    }
 
-    if (this.timerInterval) Time.stopTimer(this.timerInterval, this.container)
     this.timerInterval = null
+    console.log('Game over:', message)
+    const parent = this.container.closest('.window-content')
+    const qContainer = UIHelper.clearContainer(parent, 'quiz-game-container')
+    const header = UIHelper.createHeader('High Scores', 'quiz-header')
+    qContainer.appendChild(header)
+    header.innerHTML = message
+
+    Game.displayEndGameButtons(qContainer)
   }
 }

@@ -115,11 +115,12 @@ function backToQuiz (container) {
  */
 export function displayEndGameButtons (container) {
   const buttonContainer = UIHelper.createDiv('button-container')
-  UIHelper.clearContainer(container.querySelector('.button-container'))
+  const parent = container.closest('.window-content')
+  UIHelper.clearContainer(parent, 'button-container')
 
   const restartButton = UIHelper.createButton('Restart Game', 'button', () => {
-    UIHelper.clearContainer(container)
-    const quizGame = container.quizGameInstance
+    UIHelper.clearContainer(parent, 'quiz-game-container')
+    const quizGame = new QuizGame(container)
     if (quizGame) quizGame.loadQuiz()
   })
   const highScoresButton = UIHelper.createButton('View High Scores', 'button', () => displayHighScores(container))
