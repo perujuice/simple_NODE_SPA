@@ -1,15 +1,24 @@
+import americanFlag from '../../images/memory_flags/america.webp'
+import confederateFlag from '../../images/memory_flags/confederate.png'
+import germanFlag from '../../images/memory_flags/germany.png'
+import happyFlag from '../../images/memory_flags/happy.jpg'
+import icelandFlag from '../../images/memory_flags/iceland.webp'
+import polandFlag from '../../images/memory_flags/poland.png'
+import pirateFlag from '../../images/memory_flags/pirate.png'
+import swedenFlag from '../../images/memory_flags/sweden.webp'
+
 export { initializeMemoryGame }
 
 // To be replaced for more appropriate images.
 const imageFiles = [
-  '/images/memory_flags/america.webp',
-  '/images/memory_flags/confederate.png',
-  '/images/memory_flags/germany.png',
-  '/images/memory_flags/happy.jpg',
-  '/images/memory_flags/iceland.webp',
-  '/images/memory_flags/poland.png',
-  'images/memory_flags/pirate.png',
-  '/images/memory_flags/sweden.webp'
+  americanFlag,
+  confederateFlag,
+  germanFlag,
+  happyFlag,
+  icelandFlag,
+  polandFlag,
+  pirateFlag,
+  swedenFlag
 ]
 
 /**

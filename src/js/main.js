@@ -1,6 +1,9 @@
 import { initializeMemoryGame } from './modules/memoryGame.js'
 import { ChatApp } from './modules/chat.js'
 import { QuizGame } from './modules/quizGame.js'
+import chatImg from '../images/chat.png'
+import memImg from '../images/memory.png'
+import quizImg from '../images/quiz.webp'
 
 // Description: Main entry point for the application.
 window.addEventListener('load', main)
@@ -17,9 +20,9 @@ function main () {
   const chatIcon = document.getElementById('chat-icon')
   const customAppIcon = document.getElementById('custom-app-icon')
 
-  memoryGameIcon.addEventListener('click', () => openWindow('Memory Game', '/images/memory.png'))
-  chatIcon.addEventListener('click', () => openWindow('Chat', '/images/chat.png'))
-  customAppIcon.addEventListener('click', () => openWindow('Quiz Game', '/images/quiz.webp'))
+  memoryGameIcon.addEventListener('click', () => openWindow('Memory Game', memImg))
+  chatIcon.addEventListener('click', () => openWindow('Chat', chatImg))
+  customAppIcon.addEventListener('click', () => openWindow('Quiz Game', quizImg))
 }
 
 /**
