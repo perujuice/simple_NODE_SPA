@@ -14,8 +14,7 @@
   box-sizing: border-box; /* Include padding in total size */
   border-radius: 5px; /* Match .custom-window corners */
   overflow-wrap: break-word; /* Handle long text by breaking it */
-  word-wrap: break-word;
-  word-break: break-word;
+  word-break: normal; /* Break long words */
   overflow-y: auto; /* Enable vertical scrolling when content overflows */
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }

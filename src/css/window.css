@@ -22,6 +22,8 @@
     align-items: center;
     font-weight: bold;
     border-radius: 8px 8px 0 0; /* Rounded corners on top */
+    cursor: grabbing;
+    opacity: 1;
   }
 
 .window-logo {
@@ -49,11 +51,6 @@
     font-weight: bold;
     margin-right: auto;
 }
-
-.window-header {
-    cursor: grabbing;
-    opacity: 1;
-  }
 
 /* Button styling for closing a window */
 .close-button {
