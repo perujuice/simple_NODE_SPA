@@ -152,3 +152,65 @@
   flex-shrink: 0; /* Prevent the radio button from shrinking */
   margin-top: 4px; /* Align the radio button with the first line of text */
 }
+
+/* High Score Section Header */
+#quiz-game-container h1 {
+  font-size: 24px;
+  text-align: center; /* Center the header */
+  margin-bottom: 20px; /* Add spacing below the header */
+  font-weight: bold;
+}
+
+/* High Score List Container */
+#high-score-list-container {
+  margin: 0 auto; /* Center the container */
+  width: 90%; /* Flexible width for smaller screens */
+  max-width: 500px; /* Limit maximum width */
+  background-color: #f8f9fa; /* Light background for readability */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Arial', sans-serif; /* Clean font style */
+}
+
+/* Unordered List */
+#high-score-list {
+  list-style: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+/* List Items */
+.high-score-item {
+  padding: 12px 15px; /* Add padding around each item */
+  font-size: 18px; /* Slightly larger font */
+  color: #333; /* Neutral text color */
+  display: flex;
+  justify-content: space-between; /* Space rank/name and time evenly */
+  align-items: center; /* Vertically align text */
+}
+
+/* Remove the divider for the last item */
+.high-score-item:last-child {
+  background-color: #f8f9fa; /* Light background for the last item */
+  border-bottom: none;
+}
+
+/* Highlight for Top 3 Scores */
+.high-score-item:nth-child(1) {
+  background-color: #ffd700; /* Gold for 1st place */
+  color: #000; /* Black text for readability */
+  font-weight: bold;
+}
+
+.high-score-item:nth-child(2) {
+  background-color: #c0c0c0; /* Silver for 2nd place */
+  color: #000; /* Black text for readability */
+}
+
+.high-score-item:nth-child(3) {
+  background-color: #cd7f32; /* Bronze for 3rd place */
+  color: #fff; /* White text for readability */
+}
+
+.high-score-item:nth-child(4) {
+  background-color:antiquewhite; /* Light background for 4th place */
+}

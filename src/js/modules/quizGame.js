@@ -68,7 +68,6 @@ export class QuizGame {
 
     const questionElement = document.getElementById('question')
     const inputContainer = UIHelper.clearContainer('input-container')
-    // const timerElement = document.getElementById('timer')
 
     const response = await Game.startGame()
     this.state.nextURL = Fetch.getNextUrl(response)
@@ -183,7 +182,6 @@ export class QuizGame {
           inputContainer.appendChild(nextButton)
         } else {
           // End the game if no nextURL is provided
-          this.endGame('Congratulations! You have completed the quiz.')
           UIHelper.hideElement(submitButton)
         }
       } else {
