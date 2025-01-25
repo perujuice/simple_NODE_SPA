@@ -261,4 +261,11 @@ function startMemoryGame (rows = 4, cols = 4, container, statusPanel) {
   gameWindow.addEventListener('focusin', () => toggleKeyboardNavigation(true))
   gameWindow.addEventListener('focusout', () => toggleKeyboardNavigation(false))
   updateStatusPanel() // Initialize status panel immediately
+
+  // Clean up event listeners when the game is closed
+  const closeButton = gameWindow.querySelector('.close-button')
+  closeButton.addEventListener('click', () => {
+    clearInterval(timerInterval)
+    toggleKeyboardNavigation(false)
+  })
 }
