@@ -10,6 +10,7 @@ export class ChatApp {
     this.container = container
     this.websocket = new WebSocketHandler('wss://courselab.lnu.se/message-app/socket') // Independent WebSocket instance
     this.username = null // Username will be set after the prompt
+    this.channel = 'default-channel' // Default channel
 
     this.messages = [] // Maintain independent messages for this instance
 
@@ -19,11 +20,75 @@ export class ChatApp {
     this.receiveMessage = this.receiveMessage.bind(this) // Bind the message handler to this instance
     this.websocket.onMessage = this.receiveMessage // Register as a listener
 
-    this.showUsernamePrompt() // Show the username prompt
+    this.showChannelPrompt() // Show the channel prompt
 
     // Clean up when the window is closed
     this.container.closest('.custom-window').querySelector('.close-button').addEventListener('click', () => {
       this.websocket.socket.close() // Close WebSocket connection for this instance
+    })
+  }
+
+  /**
+   * Set the channel to listen to.
+   * @param {string|null} channel - The channel name to subscribe to, or null to listen to all channels.
+   */
+  setChannel (channel) {
+    this.channel = channel ? channel.trim() : null
+    if (this.channel) {
+      console.log(`Subscribed to channel: ${this.channel}`)
+    } else {
+      console.log('Listening to all channels.')
+    }
+    this.showUsernamePrompt() // Show the username prompt after setting the channel
+  }
+
+  /**
+   * Show a prompt for the user to select a channel or listen to all channels.
+   */
+  showChannelPrompt () {
+    const modal = document.createElement('div')
+    modal.className = 'username-modal' // Reuse the same CSS class for consistency
+
+    const promptText = document.createElement('p')
+    promptText.textContent = 'Enter the channel name you want to join or select "Listen to all channels":'
+
+    const input = document.createElement('input')
+    input.type = 'text'
+    input.placeholder = 'Channel name'
+
+    const allChannelsCheckbox = document.createElement('input')
+    allChannelsCheckbox.type = 'checkbox'
+    allChannelsCheckbox.id = 'all-channels'
+
+    const allChannelsLabel = document.createElement('label')
+    allChannelsLabel.htmlFor = 'all-channels'
+    allChannelsLabel.textContent = 'Listen to all channels'
+
+    const submitButton = document.createElement('button')
+    submitButton.textContent = 'Join'
+
+    modal.appendChild(promptText)
+    modal.appendChild(input)
+    modal.appendChild(allChannelsCheckbox)
+    modal.appendChild(allChannelsLabel)
+    modal.appendChild(submitButton)
+    document.body.appendChild(modal)
+
+    submitButton.addEventListener('click', () => {
+      const channel = input.value.trim()
+      const listenToAllChannels = allChannelsCheckbox.checked
+
+      if (listenToAllChannels) {
+        this.channel = null // Null channel means listen to all channels
+        console.log('Subscribed to all channels.')
+        modal.remove() // Close the modal
+        this.showUsernamePrompt() // Proceed to username prompt
+      } else if (channel) {
+        this.setChannel(channel) // Set the selected channel
+        modal.remove() // Close the modal
+      } else {
+        alert('Please enter a valid channel name or select "Listen to all channels".')
+      }
     })
   }
 
@@ -151,7 +216,7 @@ export class ChatApp {
       type: 'message',
       data: text,
       username: this.username,
-      channel: 'my, not so secret, channel',
+      channel: this.channel,
       key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd' // API key
     }
 
@@ -163,6 +228,12 @@ export class ChatApp {
    * @param {object} message - The message object received from the WebSocket.
    */
   receiveMessage (message) {
+    // Allow all channels if this.channel is null
+    if (this.channel !== null && message.channel !== this.channel && message.username !== 'The Server') {
+      console.log(`Message ignored: Not in channel ${this.channel}`)
+      return
+    }
+
     if (message.type === 'notification') {
       // Display notification messages as system messages
       this.addSystemMessageToDisplay(`Server: ${message.data}`, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))

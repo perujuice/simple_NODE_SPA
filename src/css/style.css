@@ -4,6 +4,7 @@
 @import url('chat.css');
 @import url('quiz.css');
 
+/* General styles */
 body, html {
     margin: 0;
     padding: 0;
