@@ -12,6 +12,7 @@ let lastWindowPosition = { x: null, y: null } // Track the last window position
  * Main entry point for the application.
  */
 function main () {
+  createTaskbar()
   const memoryGameIcon = document.getElementById('memory-game-icon')
   const chatIcon = document.getElementById('chat-icon')
   const customAppIcon = document.getElementById('custom-app-icon')
@@ -19,6 +20,16 @@ function main () {
   memoryGameIcon.addEventListener('click', () => openWindow('Memory Game', '/images/memory.png'))
   chatIcon.addEventListener('click', () => openWindow('Chat', '/images/chat.png'))
   customAppIcon.addEventListener('click', () => openWindow('Quiz Game', '/images/quiz.webp'))
+}
+
+/**
+ * Create a taskbar to manage minimized windows.
+ */
+function createTaskbar () {
+  const taskbar = document.createElement('div')
+  taskbar.id = 'taskbar'
+  taskbar.className = 'taskbar'
+  document.body.appendChild(taskbar)
 }
 
 /**
@@ -36,6 +47,7 @@ function openWindow (appName, appIcon) {
     <header class="window-header">
         <img src="${appIcon}" alt="${appName}" class="window-logo">
         <span class="window-title">${appName}</span>
+        <button class="minimize-button">-</button>
         <button class="close-button">X</button>
     </header>
     <div class="window-content"> </div>
@@ -73,6 +85,14 @@ function openWindow (appName, appIcon) {
   // Add drag functionality
   addDragAndDropHandlers(newWindow)
   bringWindowToFront(newWindow)
+
+  // Add minimize button functionality
+  const minimizeButton = newWindow.querySelector('.minimize-button')
+  minimizeButton.addEventListener('click', () => {
+    newWindow.style.display = 'none' // Hide the window
+    console.log('added to taskbar')
+    addToTaskbar(appName, newWindow) // Add to taskbar for restoration
+  })
 
   // Add close button functionality
   const closeButton = newWindow.querySelector('.close-button')
@@ -196,4 +216,24 @@ function bringWindowToFront (windowElement) {
 
   // Set the z-index of the clicked or dragged window to the highest + 1 to bring it to the front
   windowElement.style.zIndex = highestZIndex + 1
+}
+
+/**
+ * Add a minimized window to the taskbar.
+ * @param {string} appName - The name of the app.
+ * @param {HTMLElement} windowElement - The window element to restore.
+ */
+function addToTaskbar (appName, windowElement) {
+  const taskbar = document.getElementById('taskbar')
+
+  const taskItem = document.createElement('button')
+  taskItem.textContent = appName
+  taskbar.appendChild(taskItem)
+
+  // Restore the window when the task item is clicked
+  taskItem.addEventListener('click', () => {
+    windowElement.style.display = 'block' // Show the window
+    bringWindowToFront(windowElement) // Bring to front
+    taskItem.remove() // Remove the task item from the taskbar
+  })
 }

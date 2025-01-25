@@ -47,6 +47,7 @@
 .window-title {
     font-size: 14px;
     font-weight: bold;
+    margin-right: auto;
 }
 
 .window-header {
@@ -61,11 +62,24 @@
     color: white;
     font-weight: bold;
     border-radius: 3px;
-    padding: 2px 5px;
     cursor: pointer;
 }
 
 /* Close button hover effect */
 .close-button:hover {
     background: #FF1A1A;
+}
+
+.minimize-button {
+    background: #b7b5ab;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 3px;
+    cursor: pointer;
+}
+
+.minimize-button:hover {
+    background: #a3a29b;
 }

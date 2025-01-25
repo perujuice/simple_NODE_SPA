@@ -3,6 +3,7 @@
 @import url('memory-game.css');
 @import url('chat.css');
 @import url('quiz.css');
+@import url('task.css');
 
 /* General styles */
 body, html {
@@ -13,4 +14,5 @@ body, html {
     color: white;
     background: url('../images/desktop.jpg') no-repeat center center fixed;
     background-size: cover;
+    overflow: hidden; /* Ensure no scrollbars appear */
 }

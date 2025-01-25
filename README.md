@@ -14,9 +14,16 @@ The application is an SPA that acts as a **Personal Web Desktop** with 3 applica
 - Extended features: Change username between instances in the same PWD and time stamp for each message!
 - emoji support has been implemented
 - Added support for code, works also for inline code in a single message with regular text!
+- Added the ability to select channel to communicate in or to listen to all channels
 
 # Quiz Game
 <p> The Quiz game works the same as for the second Assignment! The SPA supports opening multiple instances of the quiz game and playing it simultanously on each instance. </p>
+
+- When quiz game is restarted, it is not the PWD that is reloaded but rather the DOM's state
+
+# Overall extra features
+- Minimize Apps
+- Maintain the open apps in a taskbar so they are hidden from view but maintain their state.
 
 # How to install and run the app
 1. Clone the repo with <code> git clone git@gitlab.lnu.se:1dv528/student/mh226eh/a3-spa.git </code>
