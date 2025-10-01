@@ -2,6 +2,9 @@
 
 The application is an SPA that acts as a **Personal Web Desktop** with 3 applications that can be opened by clicking on the icons on the bottom footer. Each app can be opened and interacted with separately. The apps provided include a memory game, a web socket chat application and a quiz game. Below is an example screenshot of the PWD at runtime with several application windows open.
 
+# Short video presentation of the app with code highlights
+<a>https://youtu.be/vmkvgITyJvA</a>
+
 # Example Screenshot
 ![alt text](image.png)
 
